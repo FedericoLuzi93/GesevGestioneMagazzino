@@ -6,6 +6,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -27,13 +28,16 @@ public class TestataMovimento
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="NUMERO_PROGRESSIVO")
-	private int numeroProgressivo;
+	private Long numeroProgressivo;
 	
 	@Column(name="DATA")
 	private Date data;
 	
 	@Column(name="NUM_ORDINE_LAVORO")
 	private int numOrdineLavoro;
+	
+	@Column(name = "NOTA")
+	private String nota;
 	
 	@Column(name="TOTALE_IMPORTO")
 	private double totaleImporto;
@@ -56,7 +60,7 @@ public class TestataMovimento
 	@JoinColumn(name="CODICE_FORNITORE")
 	private Fornitore fornitore;
 	
-	@OneToMany(mappedBy="testataMovimento")
+	@OneToMany(mappedBy="testataMovimento", fetch = FetchType.LAZY)
 	private List<DettaglioMovimento> listaDettaglioMovimento;
 	
 	public TestataMovimento()
@@ -64,7 +68,7 @@ public class TestataMovimento
 		
 	}
 
-	public TestataMovimento(int numeroProgressivo, Date data, int numOrdineLavoro, double totaleImporto,
+	public TestataMovimento(Long numeroProgressivo, Date data, int numOrdineLavoro, String nota, double totaleImporto,
 			String utenteOperatore) 
 	{
 		this.numeroProgressivo = numeroProgressivo;
@@ -72,6 +76,7 @@ public class TestataMovimento
 		this.numOrdineLavoro = numOrdineLavoro;
 		this.totaleImporto = totaleImporto;
 		this.utenteOperatore = utenteOperatore;
+		this.nota = nota;
 	}
 
 	

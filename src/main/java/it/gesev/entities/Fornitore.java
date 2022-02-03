@@ -21,7 +21,7 @@ public class Fornitore
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="CODICE")
-	private int codice;
+	private Long codice;
 	
 	@Column(name="DESCRIZIONE")
 	private String Descrizione;
@@ -35,7 +35,7 @@ public class Fornitore
 		
 	}
 
-	public Fornitore(int codice, String descrizione) 
+	public Fornitore(Long codice, String descrizione) 
 	{
 		this.codice = codice;
 		Descrizione = descrizione;

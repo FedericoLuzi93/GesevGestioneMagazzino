@@ -7,7 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import lombok.Getter;
@@ -22,14 +22,14 @@ public class PrelevamentoMensa
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="NUMERO_BUONO")
-	private int numeroBuono;
+	private Long numeroBuono;
 	
 	@Column(name="DATA")
 	private Date date;
 	
 	//Nome Entita nell'altra tabella
 	//mappedyBy NON ha la FR
-	@OneToOne(mappedBy="prelevamentoMensa")
+	@OneToMany(mappedBy="prelevamentoMensa")
 	private DettaglioPrelevamento dettaglioPrelevamento;
 	
 	public PrelevamentoMensa()
@@ -37,7 +37,7 @@ public class PrelevamentoMensa
 		
 	}
 
-	public PrelevamentoMensa(int numeroBuono, Date date) 
+	public PrelevamentoMensa(Long numeroBuono, Date date) 
 	{
 		this.numeroBuono = numeroBuono;
 		this.date = date;

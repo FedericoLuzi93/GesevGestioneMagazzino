@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -22,7 +23,7 @@ public class TipoMovimento
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="CODICE")
-	private int codice;
+	private Long codice;
 	
 	@Column(name="TIPO_DESCRIZIONE")
 	private String descrizione;
@@ -30,7 +31,7 @@ public class TipoMovimento
 	@Column(name="SEGNO")
 	private String segno;
 	
-	@OneToMany(mappedBy="tipoMovimento")
+	@OneToMany(mappedBy="tipoMovimento", fetch = FetchType.LAZY)
 	private List<TestataMovimento> listaTestataMovimento;
 	
 	public TipoMovimento()
@@ -38,7 +39,7 @@ public class TipoMovimento
 		
 	}
 
-	public TipoMovimento(int codice, String descrizione, String segno) 
+	public TipoMovimento(Long codice, String descrizione, String segno) 
 	{
 		this.codice = codice;
 		this.descrizione = descrizione;

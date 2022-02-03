@@ -21,7 +21,7 @@ public class Ente
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="CODICE_ACED")
-	private String codiceACED;
+	private Long codiceACED;
 	
 	@OneToOne(mappedBy="ente", cascade={CascadeType.PERSIST, CascadeType.DETACH,
 		 	CascadeType.MERGE, CascadeType.REFRESH})
@@ -32,7 +32,7 @@ public class Ente
 		
 	}
 
-	public Ente(String codiceACED) 
+	public Ente(Long codiceACED) 
 	{
 		this.codiceACED = codiceACED;
 	}

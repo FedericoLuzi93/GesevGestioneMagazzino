@@ -27,7 +27,7 @@ public class Derrata
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="DERRATA_ID")
-	private int derrataId;
+	private Long derrataId;
 	
 	@Column(name="DESCRIZIONE_DERRATA")
 	private String descrizioneDerrata;
@@ -39,7 +39,7 @@ public class Derrata
 	private double prezzo;
 	
 	@Column(name="GIACENZA")
-	private int giagenza;
+	private int giacenza;
 	
 	@Column(name="DATA_AGGIORNAMENTO_GIACENZA")
 	private Date dataAggiornamentoGiacenza;
@@ -66,14 +66,14 @@ public class Derrata
 		
 	}
 
-	public Derrata(int derrataId, String descrizioneDerrata, String unitaMisura, double prezzo, int giagenza,
+	public Derrata(Long derrataId, String descrizioneDerrata, String unitaMisura, double prezzo, int giagenza,
 			Date dataAggiornamentoGiacenza, int quantitaMinima, int codiceMensa) 
 	{
 		this.derrataId = derrataId;
 		this.descrizioneDerrata = descrizioneDerrata;
 		this.unitaMisura = unitaMisura;
 		this.prezzo = prezzo;
-		this.giagenza = giagenza;
+		this.giacenza = giagenza;
 		this.dataAggiornamentoGiacenza = dataAggiornamentoGiacenza;
 		this.quantitaMinima = quantitaMinima;
 		this.codiceMensa = codiceMensa;

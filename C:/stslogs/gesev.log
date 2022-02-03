@@ -1,0 +1,40 @@
+03-02-2022 13:06:10.873 [main] INFO 
+				it.gesev.GesevApplicationTests.logStarting - Starting GesevApplicationTests using Java 1.8.0_191 on MBP-di-biagio.homenet.telecomitalia.it with PID 8115 (started by biagiomontesano in /Users/biagiomontesano/Documents/workspace-spring-tool-suite-4-4.8.1.RELEASE/GesevGestioneMensa)
+03-02-2022 13:06:10.874 [main] INFO 
+				it.gesev.GesevApplicationTests.logStartupProfileInfo - No active profile set, falling back to default profiles: default
+03-02-2022 13:06:10.885 [background-preinit] INFO 
+				o.h.validator.internal.util.Version.<clinit> - HV000001: Hibernate Validator 6.2.0.Final
+03-02-2022 13:06:11.448 [main] INFO 
+				o.s.d.r.c.RepositoryConfigurationDelegate.registerRepositoriesIn - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+03-02-2022 13:06:11.500 [main] INFO 
+				o.s.d.r.c.RepositoryConfigurationDelegate.registerRepositoriesIn - Finished Spring Data repository scanning in 43 ms. Found 1 JPA repository interfaces.
+03-02-2022 13:06:11.825 [main] INFO 
+				o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker.postProcessAfterInitialization - Bean 'org.springframework.ws.config.annotation.DelegatingWsConfiguration' of type [org.springframework.ws.config.annotation.DelegatingWsConfiguration$$EnhancerBySpringCGLIB$$400c0478] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+03-02-2022 13:06:11.859 [main] INFO 
+				o.s.w.s.a.s.AnnotationActionEndpointMapping.afterPropertiesSet - Supporting [WS-Addressing August 2004, WS-Addressing 1.0]
+03-02-2022 13:06:12.016 [main] INFO 
+				com.zaxxer.hikari.HikariDataSource.getConnection - HikariPool-1 - Starting...
+03-02-2022 13:06:12.357 [main] INFO 
+				com.zaxxer.hikari.HikariDataSource.getConnection - HikariPool-1 - Start completed.
+03-02-2022 13:06:12.403 [main] INFO 
+				o.h.jpa.internal.util.LogHelper.logPersistenceUnitInformation - HHH000204: Processing PersistenceUnitInfo [name: default]
+03-02-2022 13:06:12.449 [main] INFO 
+				org.hibernate.Version.logVersion - HHH000412: Hibernate ORM core version 5.6.4.Final
+03-02-2022 13:06:12.616 [main] INFO 
+				o.h.annotations.common.Version.<clinit> - HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+03-02-2022 13:06:12.733 [main] INFO 
+				org.hibernate.dialect.Dialect.<init> - HHH000400: Using dialect: org.hibernate.dialect.MySQLDialect
+03-02-2022 13:06:13.373 [main] INFO 
+				o.h.e.t.j.p.i.JtaPlatformInitiator.initiateService - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+03-02-2022 13:06:13.381 [main] INFO 
+				o.s.o.j.LocalContainerEntityManagerFactoryBean.buildNativeEntityManagerFactory - Initialized JPA EntityManagerFactory for persistence unit 'default'
+03-02-2022 13:06:13.767 [main] WARN 
+				o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration.openEntityManagerInViewInterceptor - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+03-02-2022 13:06:15.100 [main] INFO 
+				it.gesev.GesevApplicationTests.logStarted - Started GesevApplicationTests in 4.499 seconds (JVM running for 5.191)
+03-02-2022 13:06:15.209 [SpringApplicationShutdownHook] INFO 
+				o.s.o.j.LocalContainerEntityManagerFactoryBean.destroy - Closing JPA EntityManagerFactory for persistence unit 'default'
+03-02-2022 13:06:15.210 [SpringApplicationShutdownHook] INFO 
+				com.zaxxer.hikari.HikariDataSource.close - HikariPool-1 - Shutdown initiated...
+03-02-2022 13:06:15.214 [SpringApplicationShutdownHook] INFO 
+				com.zaxxer.hikari.HikariDataSource.close - HikariPool-1 - Shutdown completed.

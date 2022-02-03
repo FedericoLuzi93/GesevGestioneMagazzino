@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -23,12 +24,12 @@ public class TipoDerrata
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="CODICE")
-	private int codice;
+	private Long codice;
 	
 	@Column(name="DESCRIZIONE")
 	private String descrizione;
 	
-	@OneToMany(mappedBy="tipoDerrata")
+	@OneToMany(mappedBy="tipoDerrata", fetch = FetchType.LAZY)
 	private List<Derrata> listaDerrata;
 	
 	public TipoDerrata()
@@ -36,7 +37,7 @@ public class TipoDerrata
 		
 	}
 
-	public TipoDerrata(int codice, String descrizione) 
+	public TipoDerrata(Long codice, String descrizione) 
 	{
 		this.codice = codice;
 		this.descrizione = descrizione;
