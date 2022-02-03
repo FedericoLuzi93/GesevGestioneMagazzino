@@ -7,7 +7,7 @@ import lombok.Setter;
 @Setter
 public class TipoDerrateDTO 
 {
-	//Test
+	//Test2
 	private int codice;
 	private String desrcizione; 
 
