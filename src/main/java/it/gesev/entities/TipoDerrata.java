@@ -36,13 +36,9 @@ public class TipoDerrata
 		
 	}
 
-	public TipoDerrata(int codice, String descrizione, List<Derrata> listaDerrata) 
+	public TipoDerrata(int codice, String descrizione) 
 	{
 		this.codice = codice;
 		this.descrizione = descrizione;
-		this.listaDerrata = listaDerrata;
 	}
-
-	
-
 }

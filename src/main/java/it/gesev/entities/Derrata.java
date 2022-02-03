@@ -29,7 +29,7 @@ public class Derrata
 	@Column(name="DERRATA_ID")
 	private int derrataId;
 	
-	@Column(name="UNITA_MISURA")
+	@Column(name="DESCRIZIONE_DERRATA")
 	private String descrizioneDerrata;
 	
 	@Column(name="UNITA_MISURA")
@@ -67,7 +67,7 @@ public class Derrata
 	}
 
 	public Derrata(int derrataId, String descrizioneDerrata, String unitaMisura, double prezzo, int giagenza,
-			Date dataAggiornamentoGiacenza, int quantitaMinima, int codiceMensa, TipoDerrata tipoDerrata) 
+			Date dataAggiornamentoGiacenza, int quantitaMinima, int codiceMensa) 
 	{
 		this.derrataId = derrataId;
 		this.descrizioneDerrata = descrizioneDerrata;
@@ -77,6 +77,5 @@ public class Derrata
 		this.dataAggiornamentoGiacenza = dataAggiornamentoGiacenza;
 		this.quantitaMinima = quantitaMinima;
 		this.codiceMensa = codiceMensa;
-		this.tipoDerrata = tipoDerrata;
 	}
 }

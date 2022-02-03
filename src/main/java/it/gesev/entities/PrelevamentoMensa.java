@@ -29,7 +29,7 @@ public class PrelevamentoMensa
 	
 	//Nome Entita nell'altra tabella
 	//mappedyBy NON ha la FR
-	@OneToOne(mappedBy="numeroBuono")
+	@OneToOne(mappedBy="prelevamentoMensa")
 	private DettaglioPrelevamento dettaglioPrelevamento;
 	
 	public PrelevamentoMensa()
@@ -37,10 +37,9 @@ public class PrelevamentoMensa
 		
 	}
 
-	public PrelevamentoMensa(int numeroBuono, Date date, DettaglioPrelevamento dettaglioPrelevamento) 
+	public PrelevamentoMensa(int numeroBuono, Date date) 
 	{
 		this.numeroBuono = numeroBuono;
 		this.date = date;
-		this.dettaglioPrelevamento = dettaglioPrelevamento;
 	}
 }

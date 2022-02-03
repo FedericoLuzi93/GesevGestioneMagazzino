@@ -58,7 +58,7 @@ public class DettaglioMovimento
 	}
 
 	public DettaglioMovimento(int idDettaglioMovimento, Date date, double quantitaRichiesta, double quantitaEffettiva,
-			double prezzoUnitario, double totaleValore, Derrata derrata, TestataMovimento testataMovimento) 
+			double prezzoUnitario, double totaleValore) 
 	{
 		this.idDettaglioMovimento = idDettaglioMovimento;
 		this.date = date;
@@ -66,8 +66,6 @@ public class DettaglioMovimento
 		this.quantitaEffettiva = quantitaEffettiva;
 		this.prezzoUnitario = prezzoUnitario;
 		this.totaleValore = totaleValore;
-		this.derrata = derrata;
-		this.testataMovimento = testataMovimento;
 	}
 	
 	

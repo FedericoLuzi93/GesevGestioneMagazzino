@@ -33,11 +33,11 @@ public class DettaglioPrelevamento
 	@Column(name="QUANTITA")
 	private int quantita;
 	
-	//Join ha la FK e il nome e la varabile
+	
 	@ManyToOne(	cascade={CascadeType.PERSIST, CascadeType.DETACH,
 		 	CascadeType.MERGE, CascadeType.REFRESH})
 	@JoinColumn(name="NUMERO_BUONO")
-	private int numeroBuono;
+	private PrelevamentoMensa prelevamentoMensa;
 	
 	@OneToOne	
 	@JoinColumn(name="DERRATA")
@@ -48,13 +48,11 @@ public class DettaglioPrelevamento
 		
 	}
 
-	public DettaglioPrelevamento(int dettaglioPrelevamentoId, Date date, int quantita, int numeroBuono,
-			Derrata derrata) 
+	public DettaglioPrelevamento(int dettaglioPrelevamentoId, Date date, int quantita, int numeroBuono) 
 	{
 		this.dettaglioPrelevamentoId = dettaglioPrelevamentoId;
 		this.date = date;
 		this.quantita = quantita;
-		this.numeroBuono = numeroBuono;
-		this.derrata = derrata;
+
 	}
 }

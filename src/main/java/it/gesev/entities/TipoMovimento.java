@@ -1,11 +1,13 @@
 package it.gesev.entities;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import lombok.Getter;
@@ -28,22 +30,18 @@ public class TipoMovimento
 	@Column(name="SEGNO")
 	private String segno;
 	
-	@OneToOne(mappedBy="tipoMovimento")
-	private TestataMovimento testataMovimento;
+	@OneToMany(mappedBy="tipoMovimento")
+	private List<TestataMovimento> listaTestataMovimento;
 	
 	public TipoMovimento()
 	{
 		
 	}
 
-	public TipoMovimento(int codice, String descrizione, String segno, TestataMovimento testataMovimento) 
+	public TipoMovimento(int codice, String descrizione, String segno) 
 	{
 		this.codice = codice;
 		this.descrizione = descrizione;
 		this.segno = segno;
-		this.testataMovimento = testataMovimento;
 	}
-	
-	
-
 }

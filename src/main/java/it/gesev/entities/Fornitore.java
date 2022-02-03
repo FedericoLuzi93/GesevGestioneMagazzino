@@ -35,9 +35,9 @@ public class Fornitore
 		
 	}
 
-	public Fornitore(int codice, String descrizione, TestataMovimento testataMovimento) {
+	public Fornitore(int codice, String descrizione) 
+	{
 		this.codice = codice;
 		Descrizione = descrizione;
-		this.testataMovimento = testataMovimento;
 	}
 }

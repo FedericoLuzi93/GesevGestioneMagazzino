@@ -32,10 +32,9 @@ public class Ente
 		
 	}
 
-	public Ente(String codiceACED, TestataMovimento testataMovimento) 
+	public Ente(String codiceACED) 
 	{
 		this.codiceACED = codiceACED;
-		this.testataMovimento = testataMovimento;
 	}
 	
 	

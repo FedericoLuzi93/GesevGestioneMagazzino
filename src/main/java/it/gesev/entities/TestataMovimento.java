@@ -1,9 +1,14 @@
 package it.gesev.entities;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -19,14 +24,21 @@ import lombok.Setter;
 @Setter
 public class TestataMovimento 
 {
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name="NUMERO_PROGRESSIVO")
 	private int numeroProgressivo;
 	
+	@Column(name="DATA")
 	private Date data;
 	
+	@Column(name="NUM_ORDINE_LAVORO")
 	private int numOrdineLavoro;
 	
+	@Column(name="TOTALE_IMPORTO")
 	private double totaleImporto;
 	
+	@Column(name="UTENTE_OPERATORE")
 	private String utenteOperatore;
 	
 	@OneToOne(cascade={CascadeType.PERSIST, CascadeType.DETACH,
@@ -45,7 +57,7 @@ public class TestataMovimento
 	private Fornitore fornitore;
 	
 	@OneToMany(mappedBy="testataMovimento")
-	private DettaglioMovimento dettaglioMovimento;
+	private List<DettaglioMovimento> listaDettaglioMovimento;
 	
 	public TestataMovimento()
 	{
@@ -53,18 +65,13 @@ public class TestataMovimento
 	}
 
 	public TestataMovimento(int numeroProgressivo, Date data, int numOrdineLavoro, double totaleImporto,
-			String utenteOperatore, Ente ente, TipoMovimento tipoMovimento, Fornitore fornitore,
-			DettaglioMovimento dettaglioMovimento) 
+			String utenteOperatore) 
 	{
 		this.numeroProgressivo = numeroProgressivo;
 		this.data = data;
 		this.numOrdineLavoro = numOrdineLavoro;
 		this.totaleImporto = totaleImporto;
 		this.utenteOperatore = utenteOperatore;
-		this.ente = ente;
-		this.tipoMovimento = tipoMovimento;
-		this.fornitore = fornitore;
-		this.dettaglioMovimento = dettaglioMovimento;
 	}
 
 	
