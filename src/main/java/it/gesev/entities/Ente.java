@@ -32,6 +32,7 @@ public class Ente
 		
 	}
 
+	/* costruttore con argomennto */
 	public Ente(Long codiceACED) 
 	{
 		this.codiceACED = codiceACED;
