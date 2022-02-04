@@ -1,23 +1,31 @@
 package it.gesev.entities;
 
+import java.io.Serializable;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name="FORNITORE")
-@Getter
-@Setter
-public class Fornitore 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class Fornitore implements Serializable
 {
+	
+	private static final long serialVersionUID = 3098607660112617547L;
+
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="CODICE")
@@ -27,17 +35,8 @@ public class Fornitore
 	private String Descrizione;
 	
 	@OneToOne(mappedBy="fornitore", cascade={CascadeType.PERSIST, CascadeType.DETACH,
-		 	CascadeType.MERGE, CascadeType.REFRESH})
+		 	CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.LAZY)
 	private TestataMovimento testataMovimento;
 	
-	public Fornitore()
-	{
-		
-	}
-
-	public Fornitore(Long codice, String descrizione) 
-	{
-		this.codice = codice;
-		Descrizione = descrizione;
-	}
+	
 }
