@@ -1,6 +1,7 @@
 package it.gesev.entities;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -30,7 +31,7 @@ public class PrelevamentoMensa
 	//Nome Entita nell'altra tabella
 	//mappedyBy NON ha la FR
 	@OneToMany(mappedBy="prelevamentoMensa")
-	private DettaglioPrelevamento dettaglioPrelevamento;
+	private List<DettaglioPrelevamento> dettaglioPrelevamento;
 	
 	public PrelevamentoMensa()
 	{
