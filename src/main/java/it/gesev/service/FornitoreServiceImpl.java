@@ -3,6 +3,7 @@ package it.gesev.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,6 +60,46 @@ public class FornitoreServiceImpl implements FornitoreService {
 		
 		return outputList;
 		
+	}
+
+	@Override
+	public List<FornitoreDTO> creaFornitore(String descrizione) {
+		logger.info("Avvio del service per la creazione di un nuovo fornitore...");
+		
+		if(StringUtils.isAllBlank(descrizione))
+			throw new GesevException("Descrizione non valida", HttpStatus.BAD_REQUEST);
+		
+		Long nuovoFornitore = fornitoreDAO.creaFornitore(descrizione);
+		if(nuovoFornitore == null || nuovoFornitore < 1)
+			throw new GesevException("Errore nella creazione del fornitore", HttpStatus.INTERNAL_SERVER_ERROR);
+		
+		return getAllFornitore();
+		
+		
+	}
+
+	@Override
+	public List<FornitoreDTO> cancellaFornitore(Long idFornitore) 
+	{
+		logger.info("Avvio service per cancellazione fornitore...");
+		
+		if(idFornitore == null)
+			throw new GesevException("ID fornitore non valido", HttpStatus.BAD_REQUEST);
+		
+		fornitoreDAO.cancellaFornitore(idFornitore);
+		
+		return getAllFornitore();
+		
+	}
+
+	@Override
+	public List<FornitoreDTO> aggiornaFornitore(FornitoreDTO fornitore) {
+		logger.info("Avvio del service per l'aggiornamento del fornitore...");
+		
+		ModelMapper mapper = new ModelMapper();
+		fornitoreDAO.aggiornaFornitore(mapper.map(fornitore, Fornitore.class));
+		
+		return getAllFornitore();
 	}
 
 }

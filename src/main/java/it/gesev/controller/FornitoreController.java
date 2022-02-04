@@ -10,9 +10,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import it.gesev.dto.EsitoDTO;
 import it.gesev.dto.FornitoreDTO;
 import it.gesev.exc.GesevException;
@@ -29,8 +33,13 @@ public class FornitoreController
 	private final String MESSAGGIO_ERRORE_INTERNO = "Errore interno";
 	
 	@GetMapping("/findFornitoreById/{codice}")
+	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
+			               @ApiResponse(responseCode = "400", description = "Dati in ingresso non validi"),
+			               @ApiResponse(responseCode = "500", description = "Errore interno") })
 	public ResponseEntity<EsitoDTO> getFornitoreById(@PathVariable String codice)
 	{
+		logger.info("Invocato API service findFornitoreById");
+		
 		EsitoDTO esito = new EsitoDTO();
 		HttpStatus status = null;
 		try
@@ -64,8 +73,13 @@ public class FornitoreController
 	}
 	
 	@GetMapping("/getAllFornitore")
+	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
+                           @ApiResponse(responseCode = "400", description = "Dati in ingresso non validi"),
+                           @ApiResponse(responseCode = "500", description = "Errore interno")})
 	public ResponseEntity<EsitoDTO> getListaFornitori()
 	{
+		logger.info("Invocato API service getAllFornitore");
+		
 		EsitoDTO esito = new EsitoDTO();
 		HttpStatus status = null;
 		
@@ -73,6 +87,125 @@ public class FornitoreController
 		{
 			List<FornitoreDTO> listaFornitori = fornitoreService.getAllFornitore();
 			esito.setBody(listaFornitori);
+			status = HttpStatus.OK;
+		}
+		
+		catch(GesevException gex)
+		{
+			logger.info("Si e' verificata un'eccezione", gex);
+			
+			esito.setMessaggio(gex.getMessage());
+			status = gex.getStatus();
+		}
+		
+		catch(Exception ex)
+		{
+			logger.info("Si e' verificata un'eccezione interna", ex);
+			
+			esito.setMessaggio(MESSAGGIO_ERRORE_INTERNO);
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
+			
+		}
+		
+		esito.setStatus(status.value());
+		return ResponseEntity.status(status).headers(new HttpHeaders()).body(esito);
+	}
+	
+	@PostMapping("/addFornitore")
+	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
+                           @ApiResponse(responseCode = "400", description = "Dati in ingresso non validi"),
+                           @ApiResponse(responseCode = "500", description = "Errore interno")})
+	public ResponseEntity<EsitoDTO> addFornitore(@RequestBody FornitoreDTO fornitore)
+	{
+		logger.info("Invocato API service addFornitore");
+		
+		EsitoDTO esito = new EsitoDTO();
+		HttpStatus status = null;
+		
+		try
+		{
+			List<FornitoreDTO> listaFornitori = fornitoreService.creaFornitore(fornitore.getDescrizione());
+			esito.setBody(listaFornitori);
+			status = HttpStatus.OK;
+		}
+		
+		catch(GesevException gex)
+		{
+			logger.info("Si e' verificata un'eccezione", gex);
+			
+			esito.setMessaggio(gex.getMessage());
+			status = gex.getStatus();
+		}
+		
+		catch(Exception ex)
+		{
+			logger.info("Si e' verificata un'eccezione interna", ex);
+			
+			esito.setMessaggio(MESSAGGIO_ERRORE_INTERNO);
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
+			
+		}
+		
+		esito.setStatus(status.value());
+		return ResponseEntity.status(status).headers(new HttpHeaders()).body(esito);
+	}
+	
+	@PostMapping("/deleteFornitore")
+	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
+                           @ApiResponse(responseCode = "400", description = "Dati in ingresso non validi"),
+                           @ApiResponse(responseCode = "500", description = "Errore interno")})
+	public ResponseEntity<EsitoDTO> deleteFornitore(@RequestBody FornitoreDTO fornitore)
+	{
+		logger.info("Invocato API service deleteFornintore");
+		
+		EsitoDTO esito = new EsitoDTO();
+		HttpStatus status = null;
+		
+		try
+		{
+			List<FornitoreDTO> listaFornitori = fornitoreService.cancellaFornitore(fornitore.getCodice());
+			esito.setMessaggio("Messaggio cancellato con successo");
+			esito.setBody(listaFornitori);
+			status = HttpStatus.OK;
+		}
+		
+		catch(GesevException gex)
+		{
+			logger.info("Si e' verificata un'eccezione", gex);
+			
+			esito.setMessaggio(gex.getMessage());
+			status = gex.getStatus();
+		}
+		
+		catch(Exception ex)
+		{
+			logger.info("Si e' verificata un'eccezione interna", ex);
+			
+			esito.setMessaggio(MESSAGGIO_ERRORE_INTERNO);
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
+			
+		}
+		
+		esito.setStatus(status.value());
+		return ResponseEntity.status(status).headers(new HttpHeaders()).body(esito);
+	}
+	
+	@PostMapping("/updateFornitore")
+	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
+                           @ApiResponse(responseCode = "400", description = "Dati in ingresso non validi"),
+                           @ApiResponse(responseCode = "500", description = "Errore interno")})
+	public ResponseEntity<EsitoDTO> updateFornitore(@RequestBody FornitoreDTO fornitore)
+	{
+		logger.info("Invocato API service updateFornitore");
+		
+		EsitoDTO esito = new EsitoDTO();
+		HttpStatus status = null;
+		
+		try
+		{
+			List<FornitoreDTO> listaFornitori = fornitoreService.aggiornaFornitore(fornitore);
+			esito.setBody(listaFornitori);
+			esito.setMessaggio("Fornitore aggiornato correttamente");
 			status = HttpStatus.OK;
 		}
 		

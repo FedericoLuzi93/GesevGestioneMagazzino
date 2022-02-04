@@ -32,7 +32,7 @@ public class Fornitore implements Serializable
 	private Long codice;
 	
 	@Column(name="DESCRIZIONE")
-	private String Descrizione;
+	private String descrizione;
 	
 	@OneToOne(mappedBy="fornitore", cascade={CascadeType.PERSIST, CascadeType.DETACH,
 		 	CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.LAZY)
