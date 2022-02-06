@@ -3,8 +3,22 @@ package it.gesev.dao;
 import java.util.List;
 import java.util.Optional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.Order;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Subquery;
+import javax.transaction.Transactional;
+
 import org.apache.commons.lang3.StringUtils;
-import org.hibernate.hql.internal.ast.tree.FromReferenceNode;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +26,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import it.gesev.entities.Fornitore;
+import it.gesev.enums.ColonneFornitoreEnum;
 import it.gesev.exc.GesevException;
 import it.gesev.repository.FornitoreRepository;
 
@@ -22,6 +37,9 @@ public class FornitoreDAOImpl implements FornitoreDAO {
 	
 	@Autowired
 	FornitoreRepository fornitoreRepository;
+	
+	@PersistenceContext
+	EntityManager entityManager;
 	
 	@Override
 	public Fornitore getFornitoreByCodice(Long codice) 
@@ -118,5 +136,58 @@ public class FornitoreDAOImpl implements FornitoreDAO {
 		logger.info("Fine aggiornamento");
 		
 	}
+
+	@Override
+	public List<Fornitore> cercaFornitoreConColonna(String colonna, String valore) {
+		logger.info("Ricerca dei fornitore sulla base della colonna " + colonna.toUpperCase() + " e del valore " + valore);
+		
+		logger.info("Controllo esistenza colonna...");
+		ColonneFornitoreEnum colonnaEnum = null;
+		
+		try 
+		{
+			colonnaEnum = ColonneFornitoreEnum.valueOf(colonna.toUpperCase());
+		} 
+		
+		catch (Exception e) 
+		{
+			throw new GesevException("Si e' verificato un errore. " + ExceptionUtils.getStackFrames(e)[0], HttpStatus.BAD_REQUEST);
+		}
+		
+		logger.info("Composizione della query di ricerca...");
+		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+		CriteriaQuery<Fornitore> criteriaQuery = criteriaBuilder.createQuery(Fornitore.class);
+		Root<Fornitore> fornitoreRoot = criteriaQuery.from(Fornitore.class);
+		
+		/* predicato finale per la ricerca */
+		Predicate finalPredicate = null;
+		
+		switch(colonnaEnum)
+		{
+			case CODICE:
+				/* creazione di un'espressione per effettuare LPAD */
+				Expression<String> eTaskID = fornitoreRoot.get(ColonneFornitoreEnum.CODICE.getColonnaFornitore()).as(String.class);
+		        Expression<Integer> length = criteriaBuilder.literal(6);
+		        Expression<String> fillText = criteriaBuilder.literal("0");
+		        Expression<String> expressionToGetPaddedCodice = criteriaBuilder.function("LPAD", String.class, eTaskID, length, fillText);
+		        
+				finalPredicate = criteriaBuilder.like(expressionToGetPaddedCodice, valore + "%");
+				break;
+				
+			case DESCRIZIONE:
+				finalPredicate = criteriaBuilder.like(fornitoreRoot.get(ColonneFornitoreEnum.DESCRIZIONE.getColonnaFornitore()), valore + "%");
+		}
+		
+		/* esecuzione query */
+		criteriaQuery.where(finalPredicate);
+		List<Fornitore> items = entityManager.createQuery(criteriaQuery).getResultList();
+		
+		logger.info("Numero elementi trovati: " + items.size());
+		
+		/* restituzione */
+		return items;
+	}
+	
+	
 
 }

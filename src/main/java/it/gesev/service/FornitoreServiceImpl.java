@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import it.gesev.dao.FornitoreDAO;
 import it.gesev.dto.FornitoreDTO;
+import it.gesev.dto.RicercaColonnaDTO;
 import it.gesev.entities.Fornitore;
 import it.gesev.exc.GesevException;
 
@@ -100,6 +101,20 @@ public class FornitoreServiceImpl implements FornitoreService {
 		fornitoreDAO.aggiornaFornitore(mapper.map(fornitore, Fornitore.class));
 		
 		return getAllFornitore();
+	}
+
+	@Override
+	public List<FornitoreDTO> cercaFornitorePerColonna(RicercaColonnaDTO ricerca) {
+		logger.info("Avvio del servizio per la ricerca in base alla colonna...");
+		
+		List<Fornitore> listaFornitori = fornitoreDAO.cercaFornitoreConColonna(ricerca.getColonna(), ricerca.getValue());
+		List<FornitoreDTO> outputList = new ArrayList<>();
+		
+		ModelMapper mapper = new ModelMapper();
+		for(Fornitore fornitore : listaFornitori)
+			outputList.add(mapper.map(fornitore, FornitoreDTO.class));
+		
+		return outputList;
 	}
 
 }
