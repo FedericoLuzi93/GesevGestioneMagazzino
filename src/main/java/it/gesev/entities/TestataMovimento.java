@@ -45,7 +45,7 @@ public class TestataMovimento
 	@Column(name="UTENTE_OPERATORE")
 	private String utenteOperatore;
 	
-	@OneToOne(cascade={CascadeType.PERSIST, CascadeType.DETACH,
+	@ManyToOne(cascade={CascadeType.PERSIST, CascadeType.DETACH,
 		 	CascadeType.MERGE, CascadeType.REFRESH})
 	@JoinColumn(name="CODICE_ENTE")
 	private Ente ente;
@@ -55,7 +55,7 @@ public class TestataMovimento
 	@JoinColumn(name="TIPO_MOVIMENTO")
 	private TipoMovimento tipoMovimento;
 	
-	@OneToOne(cascade={CascadeType.PERSIST, CascadeType.DETACH,
+	@ManyToOne(cascade={CascadeType.PERSIST, CascadeType.DETACH,
 		 	CascadeType.MERGE, CascadeType.REFRESH})
 	@JoinColumn(name="CODICE_FORNITORE")
 	private Fornitore fornitore;

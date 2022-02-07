@@ -1,5 +1,7 @@
 package it.gesev.service;
 
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,13 +10,19 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import it.gesev.dao.FornitoreDAO;
+import it.gesev.dao.TestataMovimentoDAO;
+import it.gesev.dto.DettaglioMovimentoDTO;
 import it.gesev.dto.FornitoreDTO;
+import it.gesev.dto.MovimentoDTO;
 import it.gesev.dto.RicercaColonnaDTO;
+import it.gesev.entities.DettaglioMovimento;
 import it.gesev.entities.Fornitore;
+import it.gesev.entities.TestataMovimento;
 import it.gesev.exc.GesevException;
 
 @Service
@@ -22,6 +30,12 @@ public class FornitoreServiceImpl implements FornitoreService {
 
 	@Autowired
 	private FornitoreDAO fornitoreDAO;
+	
+	@Autowired
+	private TestataMovimentoDAO testataDAO;
+	
+	@Value("${gesev.data.format}")
+	private String dataFormat;
 	
 	private static final Logger logger = LoggerFactory.getLogger(FornitoreServiceImpl.class);
 	
@@ -115,6 +129,45 @@ public class FornitoreServiceImpl implements FornitoreService {
 			outputList.add(mapper.map(fornitore, FornitoreDTO.class));
 		
 		return outputList;
+	}
+
+	@Override
+	public List<MovimentoDTO> cercaDettagliByFornitore(Long idFornitore) 
+	{
+		logger.info("Avvio del servizio per la ricerca delle testate del fornitore...");
+		
+		List<MovimentoDTO> listaMovimenti = new ArrayList<>();
+		List<TestataMovimento> listaTestate = testataDAO.getDettaglioMovimentoByFornitore(idFornitore);
+		SimpleDateFormat formatter = new SimpleDateFormat(this.dataFormat);
+		DecimalFormat decimalFormatter = new DecimalFormat("###,###.00");
+		
+		/* conversione dei dati nella lista in uscita */
+		for(TestataMovimento testata : listaTestate)
+		{
+			MovimentoDTO movimento = new MovimentoDTO();
+			movimento.setIdTestata(StringUtils.leftPad(String.valueOf(testata.getNumOrdineLavoro()), 4, "0"));
+			movimento.setDataTestata(formatter.format(testata.getData()));
+			movimento.setTotaleTestata(decimalFormatter.format(testata.getTotaleImporto()));
+			
+			List<DettaglioMovimentoDTO> listaDettagli = new ArrayList<>();
+			for(DettaglioMovimento dettaglio : testata.getListaDettaglioMovimento())
+			{
+				DettaglioMovimentoDTO dettaglioDTO = new DettaglioMovimentoDTO();
+				dettaglioDTO.setCodiceDerrata(StringUtils.leftPad(String.valueOf(dettaglio.getDerrata().getDerrataId()), 4, "0"));
+				dettaglioDTO.setDescrizioneDerrata(dettaglio.getDerrata().getDescrizioneDerrata());
+				dettaglioDTO.setPrezzo(decimalFormatter.format(dettaglio.getPrezzoUnitario()));
+				dettaglioDTO.setQuantita(decimalFormatter.format(dettaglio.getQuantitaEffettiva()));
+				dettaglioDTO.setValore(decimalFormatter.format(dettaglio.getTotaleValore()));
+				
+				listaDettagli.add(dettaglioDTO);
+			}
+			
+			movimento.setListaDettagli(listaDettagli);
+			listaMovimenti.add(movimento);
+		}
+		
+		return listaMovimenti;
+		
 	}
 
 }

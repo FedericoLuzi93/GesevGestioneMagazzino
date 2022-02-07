@@ -19,6 +19,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import it.gesev.dto.EsitoDTO;
 import it.gesev.dto.FornitoreDTO;
+import it.gesev.dto.MovimentoDTO;
 import it.gesev.dto.RicercaColonnaDTO;
 import it.gesev.exc.GesevException;
 import it.gesev.service.FornitoreService;
@@ -235,7 +236,7 @@ public class FornitoreController
 	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
                            @ApiResponse(responseCode = "400", description = "Dati in ingresso non validi"),
                            @ApiResponse(responseCode = "500", description = "Errore interno")})
-	public ResponseEntity<EsitoDTO> updateFornitore(@RequestBody RicercaColonnaDTO ricerca)
+	public ResponseEntity<EsitoDTO> cercaPerColonna(@RequestBody RicercaColonnaDTO ricerca)
 	{
 		logger.info("Invocato API service cercaPerColonna");
 		
@@ -246,6 +247,45 @@ public class FornitoreController
 		{
 			List<FornitoreDTO> listaForniitori = fornitoreService.cercaFornitorePerColonna(ricerca);
 			esito.setBody(listaForniitori);
+			status = HttpStatus.OK;
+		}
+		
+		catch(GesevException gex)
+		{
+			logger.info("Si e' verificata un'eccezione", gex);
+			
+			esito.setMessaggio(gex.getMessage());
+			status = gex.getStatus();
+		}
+		
+		catch(Exception ex)
+		{
+			logger.info("Si e' verificata un'eccezione interna", ex);
+			
+			esito.setMessaggio(MESSAGGIO_ERRORE_INTERNO);
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
+			
+		}
+		
+		esito.setStatus(status.value());
+		return ResponseEntity.status(status).headers(new HttpHeaders()).body(esito);
+	}
+	
+	@GetMapping("/cercaDettagliMovimento/{idFornitore}")
+	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
+                           @ApiResponse(responseCode = "400", description = "Dati in ingresso non validi"),
+                           @ApiResponse(responseCode = "500", description = "Errore interno")})
+	public ResponseEntity<EsitoDTO> cercaDettagliMovimento(@PathVariable Long idFornitore)
+	{
+		logger.info("Invocato API service cercaDettagliMovimento");
+		
+		EsitoDTO esito = new EsitoDTO();
+		HttpStatus status = null;
+		
+		try
+		{
+			List<MovimentoDTO> listaDettaglio = fornitoreService.cercaDettagliByFornitore(idFornitore);
+			esito.setBody(listaDettaglio);
 			status = HttpStatus.OK;
 		}
 		
