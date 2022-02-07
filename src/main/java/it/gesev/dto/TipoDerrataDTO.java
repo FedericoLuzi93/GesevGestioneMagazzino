@@ -5,10 +5,8 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class TipoDerrateDTO 
+public class TipoDerrataDTO 
 {
-	//Test2
 	private int codice;
-	private String desrcizione; 
-
+	private String descrizione; 
 }
