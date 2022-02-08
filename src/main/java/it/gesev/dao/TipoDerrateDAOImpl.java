@@ -87,7 +87,7 @@ public class TipoDerrateDAOImpl implements TipoDerrateDAO
 		}
 		
 		TipoDerrata tipoDerrata = optionalTipoDerrata.get();
-		if(tipoDerrata.getListaDerrata() != null)
+		if(tipoDerrata.getListaDerrata().size() > 0)
 			throw new GesevException("Impossibile cancellare il tipo derrata, poiche' e' associata ad una derrata", HttpStatus.BAD_REQUEST);
 		
 		if(optionalTipoDerrata.isPresent())
