@@ -115,13 +115,13 @@ public class TipoDerrateController
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK"),
 			@ApiResponse(code = 400, message = "Dati in ingresso non validi"),
 			@ApiResponse(code = 500, message = "Errore interno") })
-	public ResponseEntity<EsitoDTO> updateTipODerrata(@PathVariable long codiceTipoDerrata, @RequestParam String descrizione)
+	public ResponseEntity<EsitoDTO> updateTipODerrata(@PathVariable long codiceTipoDerrata, @RequestBody TipoDerrataDTO tipoDerrataDTO)
 	{
 		logger.info("Accesso alla classe TipoDerrateController - metodo updateTipODerrata");
 		EsitoDTO esito = new EsitoDTO();
 		try
 		{
-			tipoDerrateService.updateTipoDerrata(codiceTipoDerrata, descrizione);
+			tipoDerrateService.updateTipoDerrata(codiceTipoDerrata, tipoDerrataDTO);
 			esito.setStatus(HttpStatus.OK.value());
 			esito.setMessaggio("MODIFICA AVVENUTA CON SUCCESSO");
 			esito.setBody(tipoDerrateService.leggiTuttiTipiDerrate());

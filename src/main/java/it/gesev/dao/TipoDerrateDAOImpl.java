@@ -20,6 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
+import it.gesev.dto.TipoDerrataDTO;
 import it.gesev.entities.TipoDerrata;
 import it.gesev.enums.ColonneTipoDerrataEnum;
 import it.gesev.exc.GesevException;
@@ -100,7 +101,7 @@ public class TipoDerrateDAOImpl implements TipoDerrateDAO
 	}
 
 	/* Aggiorna un tipo derrata */
-	public long updateTipoDerrata(long codiceTipoDerrata, String descrizione) 
+	public long updateTipoDerrata(long codiceTipoDerrata, TipoDerrata tipoDerrata) 
 	{
 		logger.info("Accesso al TipoDerrateDAO metodo updateTipoDerrata");
 		Integer maxCodice = tipoDerrateRepositroy.getMaxCodice();
@@ -115,10 +116,10 @@ public class TipoDerrateDAOImpl implements TipoDerrateDAO
 		Optional<TipoDerrata> optionalTipoDerrataCodice = tipoDerrateRepositroy.findByCodice(codiceTipoDerrata);
 		
 		//Recupero l'oggetto dalla Descrizione
-		Optional<TipoDerrata> optionalTipoDerrataDescrizione = tipoDerrateRepositroy.findByDescrizione(descrizione);
+		Optional<TipoDerrata> optionalTipoDerrataDescrizione = tipoDerrateRepositroy.findByDescrizione(tipoDerrata.getDescrizione());
 		
 		//Descrizione già presente
-		if(optionalTipoDerrataDescrizione.isPresent() && optionalTipoDerrataDescrizione.get().getDescrizione().equalsIgnoreCase(descrizione) && 
+		if(optionalTipoDerrataDescrizione.isPresent() && optionalTipoDerrataDescrizione.get().getDescrizione().equalsIgnoreCase(tipoDerrata.getDescrizione()) && 
 				optionalTipoDerrataCodice.get().getCodice() != optionalTipoDerrataDescrizione.get().getCodice())
 		{
 			logger.info("Impossibile modificare un tipoDerrata, Descrizione già presente");
@@ -136,7 +137,7 @@ public class TipoDerrateDAOImpl implements TipoDerrateDAO
 		if(optionalTipoDerrataCodice.isPresent())
 		{
 			logger.info("Modifica del tipo derrata con codice " + codiceTipoDerrata + " in corso...");
-			tipoDerrateRepositroy.updateByCodice(descrizione, codiceTipoDerrata);
+			tipoDerrateRepositroy.save(tipoDerrata);
 			logger.info("Modifica del tipo derrata con codice " + codiceTipoDerrata + " riuscita");	
 		}
 		return 1;

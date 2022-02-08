@@ -46,7 +46,6 @@ public class TipoDerrateServiceImpl implements TipoDerrateService
 	/* Crea un tipo derrata */
 	public long createTipoDerrata(TipoDerrataDTO tipoDerrataDTO) 
 	{
-		//per un campo solo passa l'unica var anziche l'onj)
 		TipoDerrata tipoDerrata = null;
 		try
 		{
@@ -72,12 +71,21 @@ public class TipoDerrateServiceImpl implements TipoDerrateService
 	}
 
 	/* Update un tipo derrata */
-	public long updateTipoDerrata(long codiceTipoDerrata, String descrizione) 
+	public long updateTipoDerrata(long codiceTipoDerrata, TipoDerrataDTO tipoDerrataDTO) 
 	{
-		logger.info("Accesso alla classe TipODerrateServiceIMPL - metodo updateTipoDerrata");
-		tipoDerrateDAO.updateTipoDerrata(codiceTipoDerrata, descrizione);
+		TipoDerrata tipoDerrata = null;
+		try
+		{
+			logger.info("Accesso alla classe TipODerrateServiceIMPL - metodo updateTipoDerrata");
+			tipoDerrata = TipoDerrateMapper.mapToEntity(tipoDerrataDTO);	
+		}
+		catch(GesevException exc)
+		{
+			logger.info("Eccezione nel servizio updateTipoDerrata" + exc);
+			throw new GesevException("Non è stato possibile modificare il TipoDerrata" + exc, HttpStatus.BAD_REQUEST);
+		}
 		logger.info("Accesso alla classe TipODerrateServiceIMPL - Fine del metodo updateTipoDerrata");
-		return 1;
+		return tipoDerrateDAO.updateTipoDerrata(codiceTipoDerrata, tipoDerrata);
 	}
 
 	/* Cerca tipo derrata */

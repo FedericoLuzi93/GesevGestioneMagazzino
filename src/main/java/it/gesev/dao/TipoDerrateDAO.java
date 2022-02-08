@@ -9,7 +9,7 @@ public interface TipoDerrateDAO
 	public List<TipoDerrata> leggiTuttiTipiDerrate();
 	public long createTipoDerrata(TipoDerrata tipoDerrata);
 	public long deleteTipoDerrata(long codiceTipoDerrata);
-	public long updateTipoDerrata(long codiceTipoDerrata, String descrizione);
+	public long updateTipoDerrata(long codiceTipoDerrata, TipoDerrata tipoDerrata);
 	public List<TipoDerrata> cercaTipoDerrataConColonna(String colonna, String valore);
 
 }

@@ -10,7 +10,7 @@ public interface TipoDerrateService
 	public List<TipoDerrataDTO> leggiTuttiTipiDerrate();
 	public long createTipoDerrata(TipoDerrataDTO tipoDerrataDTO);
 	public long deleteTipoDerrata(long codiceTipoDerrata);
-	public long updateTipoDerrata(long codiceTipoDerrata, String descrizione);
+	public long updateTipoDerrata(long codiceTipoDerrata, TipoDerrataDTO tipoDerrataDTO);
 	public List<TipoDerrataDTO> cercaTipoDerrataConColonna(RicercaColonnaDTO ricerca);
 	
 
