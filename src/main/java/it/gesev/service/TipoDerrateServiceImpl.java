@@ -47,7 +47,6 @@ public class TipoDerrateServiceImpl implements TipoDerrateService
 	public long createTipoDerrata(TipoDerrataDTO tipoDerrataDTO) 
 	{
 		//per un campo solo passa l'unica var anziche l'onj)
-		EsitoDTO esito = new EsitoDTO();
 		TipoDerrata tipoDerrata = null;
 		try
 		{
@@ -57,8 +56,6 @@ public class TipoDerrateServiceImpl implements TipoDerrateService
 		catch(GesevException exc)
 		{
 			logger.info("Eccezione nel servizio createTipoDerrata" + exc);
-			esito.setStatus(HttpStatus.BAD_REQUEST.value());
-			esito.setBody("CONVERSIONE NON AVVENUTA");
 			throw new GesevException("Non è stato possibile inserire il TipoDerrata" + exc, HttpStatus.BAD_REQUEST);
 		}
 		logger.info("Accesso alla classe TipODerrateServiceIMPL - Fine del metodo createTipoDerrata");

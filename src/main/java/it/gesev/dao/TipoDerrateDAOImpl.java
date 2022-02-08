@@ -72,24 +72,31 @@ public class TipoDerrateDAOImpl implements TipoDerrateDAO
 	{
 		logger.info("Accesso al TipoDerrateDAO metodo deleteTipoDerrata");
 		Integer maxCodice = tipoDerrateRepositroy.getMaxCodice();
+		
 		if(codiceTipoDerrata > maxCodice || codiceTipoDerrata < 0)
 		{
 			logger.info("Impossibile cancellare un tipoDerrata con questo Codice");
 			throw new GesevException("Impossibile cancellare un tipoDerrata con questo Codice", HttpStatus.BAD_REQUEST);
 		}
+		
 		Optional<TipoDerrata> optionalTipoDerrata = tipoDerrateRepositroy.findByCodice(codiceTipoDerrata);
 		if(!optionalTipoDerrata.isPresent())
 		{
 			logger.info("Impossibile cancellare un tipoDerrata, Codice non presente");
 			throw new GesevException("Impossibile cancellare un tipoDerrata, Codice non presente", HttpStatus.BAD_REQUEST);
 		}
+		
+		TipoDerrata tipoDerrata = optionalTipoDerrata.get();
+		if(tipoDerrata.getListaDerrata().size() > 0)
+			throw new GesevException("Impossibile cancellare il tipo derrata, poiche' e' associata ad una derrata", HttpStatus.BAD_REQUEST);
+		
 		if(optionalTipoDerrata.isPresent())
 		{
 			logger.info("Cancellazione del tipo derrata con codice " + codiceTipoDerrata + " in corso...");
 			tipoDerrateRepositroy.deleteByCodice(codiceTipoDerrata);
 			logger.info("Cancellazione del tipo derrata con codice " + codiceTipoDerrata + " riuscita");
 		}
-		return 1;
+		return codiceTipoDerrata;
 	}
 
 	/* Aggiorna un tipo derrata */
