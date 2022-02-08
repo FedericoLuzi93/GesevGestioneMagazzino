@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import it.gesev.dto.EsitoDTO;
-import it.gesev.dto.FornitoreDTO;
 import it.gesev.dto.RicercaColonnaDTO;
 import it.gesev.dto.TipoDerrataDTO;
 import it.gesev.exc.GesevException;
