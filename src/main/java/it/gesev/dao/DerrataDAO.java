@@ -10,10 +10,10 @@ public interface DerrataDAO
 	
 	
 	public List<Derrata> getAllDerrata(long tipoDerrataId);
-	public Long creaDerrata(Derrata derrata);
+	public Long creaDerrata(Derrata derrata, int codiceTipoDerrata);
 	public Long deleteDerrata(Long derrataId);
 	public Long aggiornaDerrata(Derrata derrata);
-	public List<Derrata> cercaTipoDerrataConColonna(String colonna, String value);
+	public List<Derrata> cercaTipoDerrataConColonna(String colonna, String value, long idLotto);
 	
 }
 

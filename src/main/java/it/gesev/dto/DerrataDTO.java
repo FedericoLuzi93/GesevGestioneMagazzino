@@ -17,4 +17,5 @@ public class DerrataDTO
 	private Date dataAggiornamentoGiacenza;
 	private int quantitaMinima;
 	private int codiceMensa;
+	private TipoDerrataDTO tipoDerrataDTO;
 }

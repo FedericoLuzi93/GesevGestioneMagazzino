@@ -59,7 +59,7 @@ public class DerrataServiceImpl implements DerrataService {
 			throw new GesevException("Non è stato possibile inserire la derrata" + exc, HttpStatus.BAD_REQUEST);
 		}
 		logger.info("Fine del metodo createTipoDerrata - creazione in corso...");
-		return derrataDAO.creaDerrata(derrata);
+		return derrataDAO.creaDerrata(derrata, derrataDTO.getTipoDerrataDTO().getCodice());
 	}
 
 	/* Cancella una derrata */
@@ -92,13 +92,13 @@ public class DerrataServiceImpl implements DerrataService {
 		return derrata.getDerrataId();
 	}
 
-	/* Cerca una derrata */
+	/* Cerca una derrata VEDI!!! */
 	@Override
 	public List<DerrataDTO> cercaTipoDerrataConColonna(RicercaColonnaDTO ricerca) 
 	{
 		logger.info("Accesso alla classe DerrateServiceIMPL - metodo cercaTipoDerrataConColonna");
 		
-		List<Derrata> listaDerrata = derrataDAO.cercaTipoDerrataConColonna(ricerca.getColonna(), ricerca.getValue());
+		List<Derrata> listaDerrata = derrataDAO.cercaTipoDerrataConColonna(ricerca.getColonna(), ricerca.getValue(), 0);
 		List<DerrataDTO> outputList = new ArrayList<>();
 		
 		ModelMapper mapper = new ModelMapper();
