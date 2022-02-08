@@ -96,7 +96,7 @@ public class FornitoreDAOImpl implements FornitoreDAO {
 		
 		logger.info("Fornitore trovato. Cancellazione in corso...");
 		Fornitore fornitore = fornitoreOpt.get();
-		if(fornitore.getTestataMovimento() != null)
+		if(fornitore.getTestataMovimento() != null && fornitore.getTestataMovimento().size() > 0)
 			throw new GesevException("Impossibile rimuovere il fonitore, poiche' e' associato ad un movimento derrate", HttpStatus.BAD_REQUEST);
 		
 		fornitoreRepository.delete(fornitore);
