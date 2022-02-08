@@ -13,16 +13,17 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Table(name="TESTATA_MOVIMENTO")
 @Getter
 @Setter
+@NoArgsConstructor
 public class TestataMovimento 
 {
 	@Id
@@ -63,21 +64,8 @@ public class TestataMovimento
 	@OneToMany(mappedBy="testataMovimento", fetch = FetchType.LAZY)
 	private List<DettaglioMovimento> listaDettaglioMovimento;
 	
-	public TestataMovimento()
-	{
-		
-	}
-
-	public TestataMovimento(Long numeroProgressivo, Date data, int numOrdineLavoro, String nota, double totaleImporto,
-			String utenteOperatore) 
-	{
-		this.numeroProgressivo = numeroProgressivo;
-		this.data = data;
-		this.numOrdineLavoro = numOrdineLavoro;
-		this.totaleImporto = totaleImporto;
-		this.utenteOperatore = utenteOperatore;
-		this.nota = nota;
-	}
+	
+	
 
 	
 

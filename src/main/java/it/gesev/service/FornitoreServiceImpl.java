@@ -3,9 +3,11 @@ package it.gesev.service;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,14 +18,14 @@ import org.springframework.stereotype.Service;
 
 import it.gesev.dao.FornitoreDAO;
 import it.gesev.dao.TestataMovimentoDAO;
-import it.gesev.dto.DettaglioMovimentoDTO;
 import it.gesev.dto.FornitoreDTO;
 import it.gesev.dto.MovimentoDTO;
 import it.gesev.dto.RicercaColonnaDTO;
-import it.gesev.entities.DettaglioMovimento;
+import it.gesev.dto.RicercaTestateDTO;
 import it.gesev.entities.Fornitore;
 import it.gesev.entities.TestataMovimento;
 import it.gesev.exc.GesevException;
+import it.gesev.utility.ConversionUtils;
 
 @Service
 public class FornitoreServiceImpl implements FornitoreService {
@@ -143,31 +145,48 @@ public class FornitoreServiceImpl implements FornitoreService {
 		
 		/* conversione dei dati nella lista in uscita */
 		for(TestataMovimento testata : listaTestate)
-		{
-			MovimentoDTO movimento = new MovimentoDTO();
-			movimento.setIdTestata(StringUtils.leftPad(String.valueOf(testata.getNumOrdineLavoro()), 4, "0"));
-			movimento.setDataTestata(formatter.format(testata.getData()));
-			movimento.setTotaleTestata(decimalFormatter.format(testata.getTotaleImporto()));
-			
-			List<DettaglioMovimentoDTO> listaDettagli = new ArrayList<>();
-			for(DettaglioMovimento dettaglio : testata.getListaDettaglioMovimento())
-			{
-				DettaglioMovimentoDTO dettaglioDTO = new DettaglioMovimentoDTO();
-				dettaglioDTO.setCodiceDerrata(StringUtils.leftPad(String.valueOf(dettaglio.getDerrata().getDerrataId()), 4, "0"));
-				dettaglioDTO.setDescrizioneDerrata(dettaglio.getDerrata().getDescrizioneDerrata());
-				dettaglioDTO.setPrezzo(decimalFormatter.format(dettaglio.getPrezzoUnitario()));
-				dettaglioDTO.setQuantita(decimalFormatter.format(dettaglio.getQuantitaEffettiva()));
-				dettaglioDTO.setValore(decimalFormatter.format(dettaglio.getTotaleValore()));
-				
-				listaDettagli.add(dettaglioDTO);
-			}
-			
-			movimento.setListaDettagli(listaDettagli);
-			listaMovimenti.add(movimento);
-		}
+			listaMovimenti.add(ConversionUtils.convertToMovimentoDTO(testata, formatter, decimalFormatter));
 		
 		return listaMovimenti;
 		
+	}
+
+	
+
+	@Override
+	public List<MovimentoDTO> cercaDerrateInTestate(RicercaTestateDTO ricerca) 
+	{
+		logger.info("Avvio del servizio per la ricerca delle testate sulla base delle date e/o della descrizione della derrata...");
+		
+		/* formattatori */
+		SimpleDateFormat formatter = new SimpleDateFormat(this.dataFormat);
+		DecimalFormat decimalFormatter = new DecimalFormat("###,###.00");
+		
+		/* date dell'intervallo */
+		Date dataDal = null;
+		Date dataA = null;
+		
+		try
+		{
+			if(ricerca.getDataDa() != null)
+				dataDal = formatter.parse(ricerca.getDataDa());
+			
+			if(ricerca.getDataA() != null)
+				dataA = formatter.parse(ricerca.getDataA());
+		}
+		
+		catch(Exception ex)
+		{
+			throw new GesevException("Impossibile convertire le date fornite. " + ExceptionUtils.getStackFrames(ex)[0], HttpStatus.BAD_REQUEST);
+		}
+		
+		/* conversione nel DTO */
+		List<TestataMovimento> listaTestate = testataDAO.cercaDerrateInTestate(dataDal, dataA, ricerca.getDescrizioneDerrata(), ricerca.getIdFornitore());
+		List<MovimentoDTO> listaMovimenti = new ArrayList<>();
+		for(TestataMovimento testata : listaTestate)
+			listaMovimenti.add(ConversionUtils.convertToMovimentoDTO(testata, formatter, decimalFormatter));
+		
+		return listaMovimenti;
 	}
 
 }

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,9 +22,11 @@ import it.gesev.dto.EsitoDTO;
 import it.gesev.dto.FornitoreDTO;
 import it.gesev.dto.MovimentoDTO;
 import it.gesev.dto.RicercaColonnaDTO;
+import it.gesev.dto.RicercaTestateDTO;
 import it.gesev.exc.GesevException;
 import it.gesev.service.FornitoreService;
 
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/fornitore")
 public class FornitoreController 
@@ -286,6 +289,45 @@ public class FornitoreController
 		{
 			List<MovimentoDTO> listaDettaglio = fornitoreService.cercaDettagliByFornitore(idFornitore);
 			esito.setBody(listaDettaglio);
+			status = HttpStatus.OK;
+		}
+		
+		catch(GesevException gex)
+		{
+			logger.info("Si e' verificata un'eccezione", gex);
+			
+			esito.setMessaggio(gex.getMessage());
+			status = gex.getStatus();
+		}
+		
+		catch(Exception ex)
+		{
+			logger.info("Si e' verificata un'eccezione interna", ex);
+			
+			esito.setMessaggio(MESSAGGIO_ERRORE_INTERNO);
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
+			
+		}
+		
+		esito.setStatus(status.value());
+		return ResponseEntity.status(status).headers(new HttpHeaders()).body(esito);
+	}
+	
+	@GetMapping("/cercaDerrateInTestate")
+	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
+                           @ApiResponse(responseCode = "400", description = "Dati in ingresso non validi"),
+                           @ApiResponse(responseCode = "500", description = "Errore interno")})
+	public ResponseEntity<EsitoDTO> cercaDerrateInTestate(@RequestBody RicercaTestateDTO ricerca)
+	{
+		logger.info("Invocato API service cercaDerrateInTestate");
+		
+		EsitoDTO esito = new EsitoDTO();
+		HttpStatus status = null;
+		
+		try
+		{
+			List<MovimentoDTO> listaMovimenti = fornitoreService.cercaDerrateInTestate(ricerca);
+			esito.setBody(listaMovimenti);
 			status = HttpStatus.OK;
 		}
 		
