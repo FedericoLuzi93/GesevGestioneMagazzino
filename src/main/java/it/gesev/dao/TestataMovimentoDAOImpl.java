@@ -77,11 +77,8 @@ public class TestataMovimentoDAOImpl implements TestataMovimentoDAO {
 		
 		if(dataA != null)
 		{
-			Calendar calendar = Calendar.getInstance();
-			calendar.setTime(dataA);
-			calendar.set(Calendar.SECOND,1);
-//			Predicate dataMinore = criteriaBuilder.lessThanOrEqualTo(testatataRoot.get("data"), dataA);
-			Predicate dataMinore = criteriaBuilder.lessThanOrEqualTo(testatataRoot.get("data").as(java.sql.Date.class), calendar.getTime());
+	
+			Predicate dataMinore = criteriaBuilder.lessThanOrEqualTo(testatataRoot.get("data").as(java.sql.Date.class), dataA);
 			finalPredicate = finalPredicate == null ? dataMinore : criteriaBuilder.and(finalPredicate, dataMinore);
 			
 			
