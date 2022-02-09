@@ -139,7 +139,6 @@ public class FornitoreDAOImpl implements FornitoreDAO {
 
 	@Override
 	public List<Fornitore> cercaFornitoreConColonna(String colonna, String valore) {
-		logger.info("Ricerca dei fornitore sulla base della colonna " + colonna.toUpperCase() + " e del valore " + valore);
 		
 		logger.info("Controllo esistenza colonna...");
 		ColonneFornitoreEnum colonnaEnum = null;
@@ -147,6 +146,7 @@ public class FornitoreDAOImpl implements FornitoreDAO {
 		try 
 		{
 			colonnaEnum = ColonneFornitoreEnum.valueOf(colonna.toUpperCase());
+			logger.info("Ricerca dei fornitore sulla base della colonna " + colonna.toUpperCase() + " e del valore " + valore);
 		} 
 		
 		catch (Exception e) 
