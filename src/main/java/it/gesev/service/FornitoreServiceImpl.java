@@ -4,7 +4,9 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -22,6 +24,7 @@ import it.gesev.dto.FornitoreDTO;
 import it.gesev.dto.MovimentoDTO;
 import it.gesev.dto.RicercaColonnaDTO;
 import it.gesev.dto.RicercaTestateDTO;
+import it.gesev.dto.RispostaMovimentiDTO;
 import it.gesev.entities.Fornitore;
 import it.gesev.entities.TestataMovimento;
 import it.gesev.exc.GesevException;
@@ -145,7 +148,7 @@ public class FornitoreServiceImpl implements FornitoreService {
 		
 		/* conversione dei dati nella lista in uscita */
 		for(TestataMovimento testata : listaTestate)
-			listaMovimenti.add(ConversionUtils.convertToMovimentoDTO(testata, formatter, decimalFormatter));
+			listaMovimenti.add(ConversionUtils.convertToMovimentoDTO(testata, formatter, decimalFormatter, null));
 		
 		return listaMovimenti;
 		
@@ -154,7 +157,7 @@ public class FornitoreServiceImpl implements FornitoreService {
 	
 
 	@Override
-	public List<MovimentoDTO> cercaDerrateInTestate(RicercaTestateDTO ricerca) 
+	public RispostaMovimentiDTO cercaDerrateInTestate(RicercaTestateDTO ricerca) 
 	{
 		logger.info("Avvio del servizio per la ricerca delle testate sulla base delle date e/o della descrizione della derrata...");
 		
@@ -183,10 +186,15 @@ public class FornitoreServiceImpl implements FornitoreService {
 		/* conversione nel DTO */
 		List<TestataMovimento> listaTestate = testataDAO.cercaDerrateInTestate(dataDal, dataA, ricerca.getDescrizioneDerrata(), ricerca.getIdFornitore());
 		List<MovimentoDTO> listaMovimenti = new ArrayList<>();
+		Set<String> setDerrate = new HashSet<>();
 		for(TestataMovimento testata : listaTestate)
-			listaMovimenti.add(ConversionUtils.convertToMovimentoDTO(testata, formatter, decimalFormatter));
+			listaMovimenti.add(ConversionUtils.convertToMovimentoDTO(testata, formatter, decimalFormatter, setDerrate));
 		
-		return listaMovimenti;
+		RispostaMovimentiDTO risposta = new RispostaMovimentiDTO();
+		risposta.setListaDerrateFornitore(setDerrate);
+		risposta.setListaMovimenti(listaMovimenti);
+		
+		return risposta;
 	}
 
 }

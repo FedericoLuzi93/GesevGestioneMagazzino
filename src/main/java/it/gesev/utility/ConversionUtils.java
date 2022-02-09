@@ -4,6 +4,7 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -14,7 +15,7 @@ import it.gesev.entities.TestataMovimento;
 
 public class ConversionUtils 
 {
-	public static MovimentoDTO convertToMovimentoDTO(TestataMovimento testata, SimpleDateFormat formatter, DecimalFormat decimalFormatter) 
+	public static MovimentoDTO convertToMovimentoDTO(TestataMovimento testata, SimpleDateFormat formatter, DecimalFormat decimalFormatter, Set<String> setDerrate) 
 	{
 			MovimentoDTO movimento = new MovimentoDTO();
 			movimento.setIdTestata(StringUtils.leftPad(String.valueOf(testata.getNumOrdineLavoro()), 4, "0"));
@@ -26,7 +27,11 @@ public class ConversionUtils
 			{
 				DettaglioMovimentoDTO dettaglioDTO = new DettaglioMovimentoDTO();
 				dettaglioDTO.setCodiceDerrata(StringUtils.leftPad(String.valueOf(dettaglio.getDerrata().getDerrataId()), 4, "0"));
+				
 				dettaglioDTO.setDescrizioneDerrata(dettaglio.getDerrata().getDescrizioneDerrata());
+				if(setDerrate != null)
+					setDerrate.add(dettaglio.getDerrata().getDescrizioneDerrata());
+				
 				dettaglioDTO.setPrezzo(decimalFormatter.format(dettaglio.getPrezzoUnitario()));
 				dettaglioDTO.setQuantita(decimalFormatter.format(dettaglio.getQuantitaEffettiva()));
 				dettaglioDTO.setValore(decimalFormatter.format(dettaglio.getTotaleValore()));

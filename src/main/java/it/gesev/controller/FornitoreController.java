@@ -23,6 +23,7 @@ import it.gesev.dto.FornitoreDTO;
 import it.gesev.dto.MovimentoDTO;
 import it.gesev.dto.RicercaColonnaDTO;
 import it.gesev.dto.RicercaTestateDTO;
+import it.gesev.dto.RispostaMovimentiDTO;
 import it.gesev.exc.GesevException;
 import it.gesev.service.FornitoreService;
 
@@ -326,8 +327,8 @@ public class FornitoreController
 		
 		try
 		{
-			List<MovimentoDTO> listaMovimenti = fornitoreService.cercaDerrateInTestate(ricerca);
-			esito.setBody(listaMovimenti);
+			RispostaMovimentiDTO risposta = fornitoreService.cercaDerrateInTestate(ricerca);
+			esito.setBody(risposta);
 			status = HttpStatus.OK;
 		}
 		
