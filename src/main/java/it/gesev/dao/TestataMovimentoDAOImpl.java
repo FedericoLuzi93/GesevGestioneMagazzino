@@ -1,6 +1,5 @@
 package it.gesev.dao;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -80,9 +79,6 @@ public class TestataMovimentoDAOImpl implements TestataMovimentoDAO {
 	
 			Predicate dataMinore = criteriaBuilder.lessThanOrEqualTo(testatataRoot.get("data").as(java.sql.Date.class), dataA);
 			finalPredicate = finalPredicate == null ? dataMinore : criteriaBuilder.and(finalPredicate, dataMinore);
-			
-			
-			
 		}
 		
 		/* predicato relativo al fornitore */
