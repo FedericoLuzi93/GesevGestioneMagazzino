@@ -134,17 +134,17 @@ public class DerrataController
 	}
 	
 	/* Aggiorna una derrata */
-	@PutMapping("/updateDerrata")
+	@PutMapping("/updateDerrata/{idDerrata}")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK"),
 			@ApiResponse(code = 400, message = "Dati in ingresso non validi"),
 			@ApiResponse(code = 500, message = "Errore interno") })
-	public ResponseEntity<EsitoDTO> aggiornaDerrata(@RequestBody DerrataDTO derrataDTO)
+	public ResponseEntity<EsitoDTO> aggiornaDerrata(@RequestBody DerrataDTO derrataDTO, @PathVariable Long idDerrata)
 	{
 		logger.info("Invocato API service updateDerrata");
 		EsitoDTO esito = new EsitoDTO();
 		try
 		{
-			derrataService.aggiornaDerrata(derrataDTO);
+			derrataService.aggiornaDerrata(derrataDTO, idDerrata);
 			esito.setStatus(HttpStatus.OK.value());
 			esito.setMessaggio("AGGIORNAMENTO AVVENUTO CON SUCCESSO");
 //			esito.setBody(derrataService.getAllDerrata());;
@@ -164,19 +164,19 @@ public class DerrataController
 		return ResponseEntity.status(esito.getStatus()).body(esito);
 	}
 	
-	/* Cerca derrata per Colonna 
-	@GetMapping("/cercaPerColonna")
+	/* Cerca derrata per Colonna */
+	@GetMapping("/cercaPerColonna/{idLotto}")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK"),
 			@ApiResponse(code = 400, message = "Dati in ingresso non validi"),
 			@ApiResponse(code = 500, message = "Errore interno") })
-	public ResponseEntity<EsitoDTO> cercaDerrataPerColonna(@RequestBody RicercaColonnaDTO ricerca)
+	public ResponseEntity<EsitoDTO> cercaDerrataPerColonna(@RequestBody RicercaColonnaDTO ricerca, @PathVariable Long idLotto)
 	{
 		logger.info("Invocato API service cercaPerColonna");
 		EsitoDTO esito = new EsitoDTO();
 		HttpStatus status = null;
 		try
 		{
-			List<DerrataDTO> listaDerrataDTO = derrataService.cercaTipoDerrataConColonna(ricerca);
+			List<DerrataDTO> listaDerrataDTO = derrataService.cercaTipoDerrataConColonna(ricerca, idLotto);
 			esito.setBody(listaDerrataDTO);
 			status = HttpStatus.OK;
 		}
@@ -196,5 +196,5 @@ public class DerrataController
 		}
 		esito.setStatus(status.value());
 		return ResponseEntity.status(status).headers(new HttpHeaders()).body(esito);
-	} */
+	} 
 }

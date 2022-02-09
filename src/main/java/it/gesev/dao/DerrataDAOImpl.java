@@ -60,8 +60,14 @@ public class DerrataDAOImpl implements DerrataDAO
 	@Override
 	public Long creaDerrata(Derrata derrata, int codiceTipoDerrata) 
 	{
-		logger.info("Creazione nuova derrata");
+		Optional<TipoDerrata> optionalTipoDerrata = tipoDerrateRepositroy.findByCodice(codiceTipoDerrata);
+		if(!optionalTipoDerrata.isPresent())
+		{
+			logger.info("Impossibile creare una derrata. Tipo derrata non presente");
+			throw new GesevException("Impossibile creare una derrata. Tipo derrata non presente", HttpStatus.BAD_REQUEST);
+		}
 		
+		logger.info("Creazione nuova derrata in corso...");
 		if(StringUtils.isBlank(derrata.getDescrizioneDerrata()) || StringUtils.isBlank(derrata.getUnitaMisura())
 				|| derrata.getPrezzo() <= 0 || derrata.getQuantitaMinima() <= 0)
 		{
@@ -71,16 +77,16 @@ public class DerrataDAOImpl implements DerrataDAO
 		
 		Optional<Derrata> optionalTipoDerrataDescrizione = derrataRepository.findByDescrizioneDerrata(derrata.getDescrizioneDerrata());
 		if(optionalTipoDerrataDescrizione.isPresent())
-			throw new GesevException("Descizione associata alla derrata gia' esistente", HttpStatus.BAD_REQUEST);
+			throw new GesevException("Descrizione associata alla derrata gia' esistente", HttpStatus.BAD_REQUEST);
 		
-		Optional<TipoDerrata> optionalTipoDerrata = tipoDerrateRepositroy.findByCodice(codiceTipoDerrata);
 		
 		logger.info("Inserimento nuovo record derrata in corso...");
 		derrata.setDataAggiornamentoGiacenza(new Date());
 		Derrata derrataObj = derrata;
-		//if(derrataObj == null)
-		//	throw new GesevException("Impossibile inserire un nuovo reocrod nella tabella derrata", HttpStatus.INTERNAL_SERVER_ERROR);
 		
+		if(derrataObj == null)
+			throw new GesevException("Impossibile inserire un nuovo reocrod nella tabella derrata", HttpStatus.INTERNAL_SERVER_ERROR);
+
 		derrataObj.setDescrizioneDerrata(derrata.getDescrizioneDerrata());
 		derrataObj.setUnitaMisura(derrata.getUnitaMisura());
 		derrataObj.setPrezzo(derrata.getPrezzo());
@@ -92,7 +98,7 @@ public class DerrataDAOImpl implements DerrataDAO
 		derrataObj.setDettaglioPrelevamento(derrata.getDettaglioPrelevamento());
 		derrataObj.setDettaglioMovimento(derrata.getDettaglioMovimento());
 		derrataObj.setTipoDerrata(optionalTipoDerrata.get());
-		
+			
 		derrataRepository.save(derrataObj);
 		
 		return derrataObj.getDerrataId();
@@ -119,12 +125,12 @@ public class DerrataDAOImpl implements DerrataDAO
 
 	/* Aggiorna Derrata */
 	@Override
-	public Long aggiornaDerrata(Derrata derrata)
+	public Long aggiornaDerrata(Derrata derrata, Long idDerrata)
 	{
 		logger.info("Accesso alla classe DerrataDAOImpl metodo aggiornaDerrata");
 		
 		Integer maxCodice = derrataRepository.getMaxDerrataId();
-		if(derrata.getDerrataId() > maxCodice || derrata.getDerrataId() < 0)
+		if(idDerrata > maxCodice || idDerrata < 0)
 		{
 			logger.info("Impossibile modificare la derrata, codice non presente");
 			throw new GesevException("Impossibile modificare la derrata, codice non presente", HttpStatus.BAD_REQUEST);
@@ -155,6 +161,10 @@ public class DerrataDAOImpl implements DerrataDAO
 			throw new GesevException("Nessuna derrata presente con l'ID " + derrata.getDerrataId(), HttpStatus.BAD_REQUEST);
 		
 		derrataMom.setDescrizioneDerrata(derrata.getDescrizioneDerrata());
+		derrataMom.setUnitaMisura(derrata.getUnitaMisura());
+		derrataMom.setPrezzo(derrata.getPrezzo());
+		derrataMom.setQuantitaMinima(derrata.getQuantitaMinima());
+		
 		derrataRepository.save(derrataMom);
 		
 		logger.info("Fine aggiornamento");
@@ -163,22 +173,31 @@ public class DerrataDAOImpl implements DerrataDAO
 	
 	/* Derrata per un Lotto */
 	@Override
-	public List<Derrata> cercaTipoDerrataConColonna(String colonna, String value, long idLotto) 
+	public List<Derrata> cercaTipoDerrataConColonna(String colonna, String value, Long idLotto) 
 	{
-		logger.info("Ricerca della derrata sulla base della colonna " + colonna.toUpperCase() + " e del valore " + value);
-		
 		logger.info("Controllo esistenza colonna...");
+		
+		if(idLotto == null)
+			throw new GesevException("Il valore idLotto non e' valido", HttpStatus.BAD_REQUEST);
+		
+		Optional<TipoDerrata> optionalTipoDerrata = tipoDerrateRepositroy.findByCodice(idLotto);
+		if(!optionalTipoDerrata.isPresent())
+			throw new GesevException("Il valore idLotto non e' associato a nessun tipo derrata", HttpStatus.BAD_REQUEST);
+		
 		ColonneDerrataEnum colonnaEnum = null;
 		
 		try 
 		{
 			colonnaEnum = ColonneDerrataEnum.valueOf(colonna.toUpperCase());
+			logger.info("Ricerca della derrata sulla base della colonna " + colonna.toUpperCase() + " e del valore " + value);
 		} 
-		
 		catch (Exception e) 
 		{
 			throw new GesevException("Si e' verificato un errore. " + ExceptionUtils.getStackFrames(e)[0], HttpStatus.BAD_REQUEST);
 		}
+		
+		if(StringUtils.isBlank(value))
+			throw new GesevException("Il valore fornito per la colonna non e' valido", HttpStatus.BAD_REQUEST);
 		
 		logger.info("Composizione della query di ricerca...");
 		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -187,7 +206,6 @@ public class DerrataDAOImpl implements DerrataDAO
 				
 		/* predicato del lotto */ 
 		Join<Derrata, TipoDerrata> derrataJoin = derrataRoot.join("tipoDerrata");
-		
 		
 		/* predicato finale per la ricerca */
 		//where codice = idLotto
@@ -201,36 +219,46 @@ public class DerrataDAOImpl implements DerrataDAO
 				break;
 				
 			case DESCRIZIONE:
-				finalPredicate = criteriaBuilder.like(derrataRoot.get(ColonneDerrataEnum.DESCRIZIONE.getclonnaTipoDerrata()), value + "%");
+				finalPredicate = criteriaBuilder.and(finalPredicate, criteriaBuilder.like(derrataRoot.get(ColonneDerrataEnum.DESCRIZIONE.getclonnaTipoDerrata()), value + "%"));
 				break;
 			
 			case PREZZO:
-				//conversione da String a double
-				finalPredicate = criteriaBuilder.equal(derrataRoot.get(ColonneDerrataEnum.PREZZO.getclonnaTipoDerrata()), value);
-				break;
-			
-			case GIACENZA:
-				//conversione da String a double
-				finalPredicate = criteriaBuilder.equal(derrataRoot.get(ColonneDerrataEnum.GIACENZA.getclonnaTipoDerrata()), value);
-				break;
-			
-			case DATA:
-				SimpleDateFormat dateFormat = new SimpleDateFormat(this.dateFormat);
-				Date data = null;
+				Double prezzo = null;
 				try
 				{
-					data = dateFormat.parse(value);
+					prezzo = Double.valueOf(value);
 				}
 				catch(Exception e)
 				{
-					throw new GesevException("Si e' verificato un errore" + ExceptionUtils.getStackFrames(e)[0], HttpStatus.BAD_REQUEST);
+					throw new GesevException("Impossibile convertire il valore prezzo", HttpStatus.BAD_REQUEST);
 				}
-				finalPredicate = criteriaBuilder.equal(derrataRoot.get(ColonneDerrataEnum.DATA.getclonnaTipoDerrata()), value);
+				finalPredicate = criteriaBuilder.and(finalPredicate, criteriaBuilder.equal(derrataRoot.get(ColonneDerrataEnum.PREZZO.getclonnaTipoDerrata()), prezzo));
+				break;
+			
+			case GIACENZA:
+				Double giacenza = null;
+				try
+				{
+					giacenza = Double.valueOf(value);
+				}
+				catch(Exception e)
+				{
+					throw new GesevException("Impossibile convertire il valore giacenza", HttpStatus.BAD_REQUEST);
+				}
+				finalPredicate = criteriaBuilder.and(finalPredicate, criteriaBuilder.equal(derrataRoot.get(ColonneDerrataEnum.GIACENZA.getclonnaTipoDerrata()), giacenza));
 				break;
 			
 			case QUANTITA_MINIMA:
-				//conversione da String a double o inter controlla poi
-				finalPredicate = criteriaBuilder.equal(derrataRoot.get(ColonneDerrataEnum.QUANTITA_MINIMA.getclonnaTipoDerrata()), value);
+				Integer quantitaMinima = null;
+				try
+				{
+					quantitaMinima = Integer.valueOf(value);
+				}
+				catch(Exception e)
+				{
+					throw new GesevException("Impossibile convertire il valore giacenza", HttpStatus.BAD_REQUEST);
+				}
+				finalPredicate = criteriaBuilder.and(finalPredicate, criteriaBuilder.equal(derrataRoot.get(ColonneDerrataEnum.QUANTITA_MINIMA.getclonnaTipoDerrata()), quantitaMinima));
 				break;
 			
 		}
@@ -244,5 +272,4 @@ public class DerrataDAOImpl implements DerrataDAO
 		/* restituzione */
 		return items;
 	}
-
 }

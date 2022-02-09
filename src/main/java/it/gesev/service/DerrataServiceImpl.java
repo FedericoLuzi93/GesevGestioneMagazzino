@@ -1,30 +1,34 @@
 package it.gesev.service;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import it.gesev.dao.DerrataDAO;
 import it.gesev.dto.DerrataDTO;
 import it.gesev.dto.RicercaColonnaDTO;
-import it.gesev.dto.TipoDerrataDTO;
 import it.gesev.entities.Derrata;
-import it.gesev.entities.TipoDerrata;
 import it.gesev.exc.GesevException;
 import it.gesev.utility.DerrataMapper;
-import it.gesev.utility.TipoDerrateMapper;
 
 @Service
 public class DerrataServiceImpl implements DerrataService {
 
 	@Autowired
 	private DerrataDAO derrataDAO;
+	
+	@Value("${gesev.data.format}")
+	private String dateFormat;
 	
 	private static final Logger logger = LoggerFactory.getLogger(DerrataServiceImpl.class);
 	
@@ -36,8 +40,8 @@ public class DerrataServiceImpl implements DerrataService {
 		List<DerrataDTO> listaDerrataDTO =  new ArrayList<>();
 		for(Derrata dr : listaDerrata)
 		{
-			logger.info("Accesso alla classe DerrataServiceImpl - metodo getAllDerrata - ciclo for");
-			listaDerrataDTO.add(DerrataMapper.mapToDTO(dr));	
+			logger.info("Accesso alla classe DerrataServiceImpl - metodo getAllDerrata - ciclo for");			
+			listaDerrataDTO.add(DerrataMapper.mapToDTO(dr, dateFormat));
 		}
 		logger.info("Accesso alla classe DerrataServiceImpl - metodo getAllDerrata - Fine del ciclo for");
 		return listaDerrataDTO;
@@ -74,7 +78,7 @@ public class DerrataServiceImpl implements DerrataService {
 
 	/* Aggiorna una derrata */
 	@Override
-	public Long aggiornaDerrata(DerrataDTO derrataDTO) 
+	public Long aggiornaDerrata(DerrataDTO derrataDTO, Long idDerrata) 
 	{
 		Derrata derrata = null;
 		try
@@ -88,17 +92,17 @@ public class DerrataServiceImpl implements DerrataService {
 			throw new GesevException("Non è stato possibile aggiornare la derrata" + exc, HttpStatus.BAD_REQUEST);
 		}
 		logger.info("Fine del metodo aggiornaDerrata - aggiornamento in corso...");
-		derrataDAO.aggiornaDerrata(derrata);
+		derrataDAO.aggiornaDerrata(derrata, idDerrata);
 		return derrata.getDerrataId();
 	}
 
 	/* Cerca una derrata VEDI!!! */
 	@Override
-	public List<DerrataDTO> cercaTipoDerrataConColonna(RicercaColonnaDTO ricerca) 
+	public List<DerrataDTO> cercaTipoDerrataConColonna(RicercaColonnaDTO ricerca, Long idLotto) 
 	{
 		logger.info("Accesso alla classe DerrateServiceIMPL - metodo cercaTipoDerrataConColonna");
 		
-		List<Derrata> listaDerrata = derrataDAO.cercaTipoDerrataConColonna(ricerca.getColonna(), ricerca.getValue(), 0);
+		List<Derrata> listaDerrata = derrataDAO.cercaTipoDerrataConColonna(ricerca.getColonna(), ricerca.getValue(), idLotto);
 		List<DerrataDTO> outputList = new ArrayList<>();
 		
 		ModelMapper mapper = new ModelMapper();

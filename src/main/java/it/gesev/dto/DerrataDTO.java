@@ -1,7 +1,5 @@
 package it.gesev.dto;
 
-import java.util.Date;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,7 +12,7 @@ public class DerrataDTO
 	private String unitaMisura;
 	private double prezzo;
 	private int giacenza;
-	private Date dataAggiornamentoGiacenza;
+	private String dataAggiornamentoGiacenza;
 	private int quantitaMinima;
 	private int codiceMensa;
 	private TipoDerrataDTO tipoDerrataDTO;

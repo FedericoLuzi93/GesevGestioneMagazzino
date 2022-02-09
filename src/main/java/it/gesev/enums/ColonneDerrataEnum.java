@@ -7,7 +7,6 @@ public enum ColonneDerrataEnum
 	UNITA_MISURA("unitaMisura"),
 	PREZZO("prezzo"),
 	GIACENZA("giacenza"),
-	DATA("dataAggiornamentoGiacenza"),
 	QUANTITA_MINIMA("quantitaMinima");
 	
 	

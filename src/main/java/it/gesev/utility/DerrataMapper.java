@@ -1,5 +1,7 @@
 package it.gesev.utility;
 
+import java.text.SimpleDateFormat;
+
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,12 +16,15 @@ public class DerrataMapper
 	private static final Logger logger = LoggerFactory.getLogger(DerrataMapper.class);
 	
 	//Entity to DTO
-	public static DerrataDTO mapToDTO(Derrata derrata)
+	public static DerrataDTO mapToDTO(Derrata derrata, String dateFormat)
 	{
 		logger.info("Accesso alla classe DerrataMapper e al metodo mapToDTO");
 		ModelMapper mapper = new ModelMapper();
-		DerrataDTO DerrataDTO = mapper.map(derrata, DerrataDTO.class);
-		return DerrataDTO;
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat);
+		DerrataDTO derrataDTO = mapper.map(derrata, DerrataDTO.class);
+		if(derrata.getDataAggiornamentoGiacenza() != null)
+			derrataDTO.setDataAggiornamentoGiacenza(simpleDateFormat.format(derrata.getDataAggiornamentoGiacenza()));
+		return derrataDTO;
 	}
 	
 	//DTO to Entity
