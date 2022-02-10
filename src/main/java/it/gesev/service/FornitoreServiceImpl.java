@@ -137,7 +137,7 @@ public class FornitoreServiceImpl implements FornitoreService {
 	}
 
 	@Override
-	public List<MovimentoDTO> cercaDettagliByFornitore(Long idFornitore) 
+	public RispostaMovimentiDTO cercaDettagliByFornitore(Long idFornitore) 
 	{
 		logger.info("Avvio del servizio per la ricerca delle testate del fornitore...");
 		
@@ -147,10 +147,15 @@ public class FornitoreServiceImpl implements FornitoreService {
 		DecimalFormat decimalFormatter = new DecimalFormat("###,###.00");
 		
 		/* conversione dei dati nella lista in uscita */
+		Set<String> setDerrate = new HashSet<>();
 		for(TestataMovimento testata : listaTestate)
-			listaMovimenti.add(ConversionUtils.convertToMovimentoDTO(testata, formatter, decimalFormatter, null));
+			listaMovimenti.add(ConversionUtils.convertToMovimentoDTO(testata, formatter, decimalFormatter, setDerrate));
 		
-		return listaMovimenti;
+		RispostaMovimentiDTO risposta = new RispostaMovimentiDTO();
+		risposta.setListaDerrateFornitore(setDerrate);
+		risposta.setListaMovimenti(listaMovimenti);
+		
+		return risposta;
 		
 	}
 

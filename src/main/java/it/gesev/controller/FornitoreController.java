@@ -288,8 +288,8 @@ public class FornitoreController
 		
 		try
 		{
-			List<MovimentoDTO> listaDettaglio = fornitoreService.cercaDettagliByFornitore(idFornitore);
-			esito.setBody(listaDettaglio);
+			RispostaMovimentiDTO risposta = fornitoreService.cercaDettagliByFornitore(idFornitore);
+			esito.setBody(risposta);
 			status = HttpStatus.OK;
 		}
 		
@@ -314,7 +314,7 @@ public class FornitoreController
 		return ResponseEntity.status(status).headers(new HttpHeaders()).body(esito);
 	}
 	
-	@GetMapping("/cercaDerrateInTestate")
+	@PostMapping("/cercaDerrateInTestate")
 	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
                            @ApiResponse(responseCode = "400", description = "Dati in ingresso non validi"),
                            @ApiResponse(responseCode = "500", description = "Errore interno")})
