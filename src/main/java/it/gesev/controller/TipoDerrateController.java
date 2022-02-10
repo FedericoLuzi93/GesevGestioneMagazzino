@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.ApiResponse;
@@ -142,7 +141,7 @@ public class TipoDerrateController
 	}
 	
 	/* Cerca tipo derrata per Colonna */
-	@GetMapping("/cercaPerColonna")
+	@PostMapping("/cercaPerColonna")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK"),
 			@ApiResponse(code = 400, message = "Dati in ingresso non validi"),
 			@ApiResponse(code = 500, message = "Errore interno") })

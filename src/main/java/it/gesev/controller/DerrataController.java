@@ -23,7 +23,6 @@ import io.swagger.annotations.ApiResponses;
 import it.gesev.dto.DerrataDTO;
 import it.gesev.dto.EsitoDTO;
 import it.gesev.dto.RicercaColonnaDTO;
-import it.gesev.dto.TipoDerrataDTO;
 import it.gesev.exc.GesevException;
 import it.gesev.service.DerrataService;
 
@@ -165,7 +164,7 @@ public class DerrataController
 	}
 	
 	/* Cerca derrata per Colonna */
-	@GetMapping("/cercaPerColonna/{idLotto}")
+	@PostMapping("/cercaPerColonna/{idLotto}")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK"),
 			@ApiResponse(code = 400, message = "Dati in ingresso non validi"),
 			@ApiResponse(code = 500, message = "Errore interno") })
