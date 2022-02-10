@@ -1,11 +1,8 @@
 package it.gesev.service;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -107,7 +104,8 @@ public class DerrataServiceImpl implements DerrataService {
 		
 		ModelMapper mapper = new ModelMapper();
 		for(Derrata derrata : listaDerrata)
-			outputList.add(mapper.map(derrata, DerrataDTO.class));
+			outputList.add(DerrataMapper.mapToDTO(derrata, dateFormat));
+			//outputList.add(mapper.map(derrata, DerrataDTO.class));
 		
 		return outputList;
 	}
