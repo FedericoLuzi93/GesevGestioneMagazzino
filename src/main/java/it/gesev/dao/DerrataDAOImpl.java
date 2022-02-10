@@ -176,6 +176,9 @@ public class DerrataDAOImpl implements DerrataDAO
 	{
 		logger.info("Controllo esistenza colonna...");
 		
+		if(StringUtils.isBlank(value))
+			throw new GesevException("Inserire un valore per la ricerca", HttpStatus.BAD_REQUEST);
+		
 		if(idLotto == null)
 			throw new GesevException("Il valore idLotto non e' valido", HttpStatus.BAD_REQUEST);
 		
@@ -248,10 +251,10 @@ public class DerrataDAOImpl implements DerrataDAO
 				break;
 			
 			case QUANTITA_MINIMA:
-				Integer quantitaMinima = null;
+				Double quantitaMinima = null;
 				try
 				{
-					quantitaMinima = Integer.valueOf(value);
+					quantitaMinima = Double.valueOf(value);
 				}
 				catch(Exception e)
 				{
