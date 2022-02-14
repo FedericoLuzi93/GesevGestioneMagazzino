@@ -4,7 +4,6 @@ import java.util.List;
 
 import it.gesev.dto.DerrataDTO;
 import it.gesev.dto.RicercaColonnaDTO;
-import it.gesev.entities.Derrata;
 
 public interface DerrataService 
 {

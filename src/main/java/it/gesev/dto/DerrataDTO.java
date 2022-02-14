@@ -11,9 +11,9 @@ public class DerrataDTO
 	private String descrizioneDerrata;
 	private String unitaMisura;
 	private double prezzo;
-	private int giacenza;
+	private double giacenza;
 	private String dataAggiornamentoGiacenza;
-	private int quantitaMinima;
+	private double quantitaMinima;
 	private int codiceMensa;
 	private TipoDerrataDTO tipoDerrataDTO;
 }

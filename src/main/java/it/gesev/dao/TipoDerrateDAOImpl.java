@@ -146,6 +146,9 @@ public class TipoDerrateDAOImpl implements TipoDerrateDAO
 	/* Cerca una derrata */
 	public List<TipoDerrata> cercaTipoDerrataConColonna(String colonna, String valore) 
 	{
+		if(StringUtils.isBlank(valore))
+			throw new GesevException("Inserire un valore per la ricerca", HttpStatus.BAD_REQUEST);
+		
 		logger.info("Ricerca del tipo derrata sulla base della colonna " + colonna.toUpperCase() + " e del valore " + valore);
 		logger.info("Controllo esistenza colonna...");
 		ColonneTipoDerrataEnum colonnaEnum = null;

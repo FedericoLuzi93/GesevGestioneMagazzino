@@ -39,13 +39,13 @@ public class Derrata
 	private double prezzo;
 	
 	@Column(name="GIACENZA")
-	private int giacenza;
+	private double giacenza;
 	
 	@Column(name="DATA_AGGIORNAMENTO_GIACENZA")
 	private Date dataAggiornamentoGiacenza;
 	
 	@Column(name="QUANTITA_MIMINA")
-	private int quantitaMinima;
+	private double quantitaMinima;
 	
 	@Column(name="CODICE_MENSA")
 	private int codiceMensa;
