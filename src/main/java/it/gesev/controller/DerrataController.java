@@ -168,7 +168,7 @@ public class DerrataController
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK"),
 			@ApiResponse(code = 400, message = "Dati in ingresso non validi"),
 			@ApiResponse(code = 500, message = "Errore interno") })
-	public ResponseEntity<EsitoDTO> cercaDerrataPerColonna(@RequestBody RicercaColonnaDTO ricerca, @PathVariable Long idLotto)
+	public ResponseEntity<EsitoDTO> cercaDerrataPerColonna(@RequestBody List<RicercaColonnaDTO> ricerca, @PathVariable Long idLotto)
 	{
 		logger.info("Invocato API service cercaPerColonna");
 		EsitoDTO esito = new EsitoDTO();

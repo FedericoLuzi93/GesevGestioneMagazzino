@@ -1,7 +1,9 @@
 package it.gesev.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -11,11 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import it.gesev.dao.TipoDerrateDAO;
-import it.gesev.dto.EsitoDTO;
-import it.gesev.dto.FornitoreDTO;
 import it.gesev.dto.RicercaColonnaDTO;
 import it.gesev.dto.TipoDerrataDTO;
-import it.gesev.entities.Fornitore;
 import it.gesev.entities.TipoDerrata;
 import it.gesev.exc.GesevException;
 import it.gesev.utility.TipoDerrateMapper;
@@ -90,11 +89,16 @@ public class TipoDerrateServiceImpl implements TipoDerrateService
 
 	/* Cerca tipo derrata */
 	@Override
-	public List<TipoDerrataDTO> cercaTipoDerrataConColonna(RicercaColonnaDTO ricerca) 
+	public List<TipoDerrataDTO> cercaTipoDerrataConColonna(List<RicercaColonnaDTO> ricerca) 
 	{
 		logger.info("Accesso alla classe TipODerrateServiceIMPL - metodo cercaTipoDerrataConColonna");
-		
-		List<TipoDerrata> listaTipoDerrata = tipoDerrateDAO.cercaTipoDerrataConColonna(ricerca.getColonna(), ricerca.getValue());
+		List<RicercaColonnaDTO> listaRicerca = ricerca;
+		Map<String, String>	mappaRicerca = new HashMap<>();
+		for(RicercaColonnaDTO rc : listaRicerca )
+		{
+			mappaRicerca.put(rc.getColonna(), rc.getValue());
+		}
+		List<TipoDerrata> listaTipoDerrata = tipoDerrateDAO.cercaTipoDerrataConColonna(mappaRicerca);
 		List<TipoDerrataDTO> outputList = new ArrayList<>();
 		
 		ModelMapper mapper = new ModelMapper();

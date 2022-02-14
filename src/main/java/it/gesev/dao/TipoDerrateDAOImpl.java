@@ -1,6 +1,8 @@
 package it.gesev.dao;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 
 import javax.persistence.EntityManager;
@@ -20,7 +22,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
-import it.gesev.dto.TipoDerrataDTO;
 import it.gesev.entities.TipoDerrata;
 import it.gesev.enums.ColonneTipoDerrataEnum;
 import it.gesev.exc.GesevException;
@@ -30,7 +31,6 @@ import it.gesev.repository.TipoDerrateRepositroy;
 @Component
 public class TipoDerrateDAOImpl implements TipoDerrateDAO 
 {
-	
 	@Autowired
 	private TipoDerrateRepositroy tipoDerrateRepositroy;
 	
@@ -105,20 +105,18 @@ public class TipoDerrateDAOImpl implements TipoDerrateDAO
 	{
 		logger.info("Accesso al TipoDerrateDAO metodo updateTipoDerrata");
 		Integer maxCodice = tipoDerrateRepositroy.getMaxCodice();
-		//Codice Max e Min di 0
+		
+		// codice Massimo
 		if(codiceTipoDerrata > maxCodice || codiceTipoDerrata < 0)
 		{
 			logger.info("Impossibile modificare un tipoDerrata con questo Codice");
 			throw new GesevException("Impossibile modificare un tipoDerrata con questo Codice", HttpStatus.BAD_REQUEST);
 		}
 		
-		//Recupero l'oggetto dal Codice
 		Optional<TipoDerrata> optionalTipoDerrataCodice = tipoDerrateRepositroy.findByCodice(codiceTipoDerrata);
-		
-		//Recupero l'oggetto dalla Descrizione
 		Optional<TipoDerrata> optionalTipoDerrataDescrizione = tipoDerrateRepositroy.findByDescrizione(tipoDerrata.getDescrizione());
 		
-		//Descrizione già presente
+		// Controllo Descrizione
 		if(optionalTipoDerrataDescrizione.isPresent() && optionalTipoDerrataDescrizione.get().getDescrizione().equalsIgnoreCase(tipoDerrata.getDescrizione()) && 
 				optionalTipoDerrataCodice.get().getCodice() != optionalTipoDerrataDescrizione.get().getCodice())
 		{
@@ -126,14 +124,12 @@ public class TipoDerrateDAOImpl implements TipoDerrateDAO
 			throw new GesevException("Impossibile modificare un tipoDerrata, Descrizione già presente", HttpStatus.BAD_REQUEST);
 		}
 				
-		//Codice non presente
+		// Controllo Codice
 		if(!optionalTipoDerrataCodice.isPresent())
 		{
 			logger.info("Impossibile modificare un tipoDerrata, Codice non presente");
 			throw new GesevException("Impossibile modificare un tipoDerrata, Codice non presente", HttpStatus.BAD_REQUEST);
 		}
-		
-		//Codice presente
 		if(optionalTipoDerrataCodice.isPresent())
 		{
 			logger.info("Modifica del tipo derrata con codice " + codiceTipoDerrata + " in corso...");
@@ -144,47 +140,54 @@ public class TipoDerrateDAOImpl implements TipoDerrateDAO
 	}
 	
 	/* Cerca una derrata */
-	public List<TipoDerrata> cercaTipoDerrataConColonna(String colonna, String valore) 
+	public List<TipoDerrata> cercaTipoDerrataConColonna(Map<String, String> mappa) 
 	{
-		if(StringUtils.isBlank(valore))
-			throw new GesevException("Inserire un valore per la ricerca", HttpStatus.BAD_REQUEST);
-		
-		logger.info("Ricerca del tipo derrata sulla base della colonna " + colonna.toUpperCase() + " e del valore " + valore);
-		logger.info("Controllo esistenza colonna...");
-		ColonneTipoDerrataEnum colonnaEnum = null;
-		
-		try 
-		{
-			colonnaEnum = ColonneTipoDerrataEnum.valueOf(colonna.toUpperCase());
-		} 
-		
-		catch (Exception e) 
-		{
-			throw new GesevException("Si e' verificato un errore. " + ExceptionUtils.getStackFrames(e)[0], HttpStatus.BAD_REQUEST);
-		}
-		
 		logger.info("Composizione della query di ricerca...");
 		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<TipoDerrata> criteriaQuery = criteriaBuilder.createQuery(TipoDerrata.class);
 		Root<TipoDerrata> tipoDerrataRoot = criteriaQuery.from(TipoDerrata.class);
 		
 		//predicato finale per la ricerca
-		Predicate finalPredicate = null;
+		Predicate finalPredicate = criteriaBuilder.and();
 		
-		switch(colonnaEnum)
+		for(Entry<String, String> entryMap : mappa.entrySet())
 		{
-			case CODICE:
-				/* creazione di un'espressione per effettuare LPAD */
-				Expression<String> eTaskID = tipoDerrataRoot.get(ColonneTipoDerrataEnum.CODICE.getclonnaTipoDerrata()).as(String.class);
-		        Expression<Integer> length = criteriaBuilder.literal(6);
-		        Expression<String> fillText = criteriaBuilder.literal("0");
-		        Expression<String> expressionToGetPaddedCodice = criteriaBuilder.function("LPAD", String.class, eTaskID, length, fillText);
-		        
-				finalPredicate = criteriaBuilder.like(expressionToGetPaddedCodice, valore + "%");
-				break;
-				
-			case DESCRIZIONE:
-				finalPredicate = criteriaBuilder.like(tipoDerrataRoot.get(ColonneTipoDerrataEnum.DESCRIZIONE.getclonnaTipoDerrata()), valore + "%");
+			ColonneTipoDerrataEnum colonnaEnum = null;
+			String colonna = entryMap.getKey();
+			String valore = entryMap.getValue();
+	
+			if(StringUtils.isBlank(valore))
+				throw new GesevException("Inserire un valore per la ricerca", HttpStatus.BAD_REQUEST);
+			
+			logger.info("Ricerca del tipo derrata sulla base della colonna " + colonna.toUpperCase() + " e del valore " + valore);
+			logger.info("Controllo esistenza colonna...");
+			
+			try 
+			{
+				colonnaEnum = ColonneTipoDerrataEnum.valueOf(colonna.toUpperCase());
+			} 
+			
+			catch (Exception e) 
+			{
+				throw new GesevException("Si e' verificato un errore. " + ExceptionUtils.getStackFrames(e)[0], HttpStatus.BAD_REQUEST);
+			}
+			
+			switch(colonnaEnum)
+			{
+				case CODICE:
+					// creazione di un'espressione per effettuare LPAD
+					Expression<String> eTaskID = tipoDerrataRoot.get(ColonneTipoDerrataEnum.CODICE.getclonnaTipoDerrata()).as(String.class);
+			        Expression<Integer> length = criteriaBuilder.literal(6);
+			        Expression<String> fillText = criteriaBuilder.literal("0");
+			        Expression<String> expressionToGetPaddedCodice = criteriaBuilder.function("LPAD", String.class, eTaskID, length, fillText);
+			        
+					finalPredicate = criteriaBuilder.and(finalPredicate, criteriaBuilder.like(expressionToGetPaddedCodice, valore + "%"));
+					break;
+					
+				case DESCRIZIONE:
+					finalPredicate = criteriaBuilder.and(finalPredicate, criteriaBuilder.like(tipoDerrataRoot.get(ColonneTipoDerrataEnum.DESCRIZIONE.getclonnaTipoDerrata()), valore + "%"));
+					break;
+			}
 		}
 		
 		//esecuzione query

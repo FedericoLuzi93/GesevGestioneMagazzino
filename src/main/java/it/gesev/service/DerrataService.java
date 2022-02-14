@@ -11,5 +11,5 @@ public interface DerrataService
 	public Long creaDerrata(DerrataDTO derrataDTO);
 	public Long deleteDerrata(Long derrataId);
 	public Long aggiornaDerrata(DerrataDTO derrataDTO, Long idDerrata);
-	public List<DerrataDTO> cercaTipoDerrataConColonna(RicercaColonnaDTO ricerca, Long idLotto);
+	public List<DerrataDTO> cercaTipoDerrataConColonna(List<RicercaColonnaDTO> ricerca, Long idLotto);
 }

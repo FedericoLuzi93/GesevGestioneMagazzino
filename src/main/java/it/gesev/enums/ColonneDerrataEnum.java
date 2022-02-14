@@ -7,7 +7,8 @@ public enum ColonneDerrataEnum
 	UNITA_MISURA("unitaMisura"),
 	PREZZO("prezzo"),
 	GIACENZA("giacenza"),
-	QUANTITA_MINIMA("quantitaMinima");
+	QUANTITA_MINIMA("quantitaMinima"),
+	DATA_AGGIORNAMENTO_GIACENZA("dataAggiornamentoGiacenza");
 	
 	
 	private String clonnaDerrata;

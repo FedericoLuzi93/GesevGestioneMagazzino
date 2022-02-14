@@ -1,7 +1,10 @@
 package it.gesev.dao;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 
 import javax.persistence.EntityManager;
@@ -77,7 +80,6 @@ public class DerrataDAOImpl implements DerrataDAO
 		Optional<Derrata> optionalTipoDerrataDescrizione = derrataRepository.findByDescrizioneDerrata(derrata.getDescrizioneDerrata());
 		if(optionalTipoDerrataDescrizione.isPresent())
 			throw new GesevException("Descrizione associata alla derrata gia' esistente", HttpStatus.BAD_REQUEST);
-		
 		
 		logger.info("Inserimento nuovo record derrata in corso...");
 		derrata.setDataAggiornamentoGiacenza(new Date());
@@ -172,13 +174,12 @@ public class DerrataDAOImpl implements DerrataDAO
 	
 	/* Derrata per un Lotto */
 	@Override
-	public List<Derrata> cercaTipoDerrataConColonna(String colonna, String value, Long idLotto) 
+	public List<Derrata> cercaTipoDerrataConColonna(Map<String, String> mappa, Long idLotto)
 	{
-		logger.info("Controllo esistenza colonna...");
 		
-		if(StringUtils.isBlank(value))
-			throw new GesevException("Inserire un valore per la ricerca", HttpStatus.BAD_REQUEST);
-		
+		logger.info("Controllo esistenza Derrata...");
+	
+		/* Controllo idLotto */
 		if(idLotto == null)
 			throw new GesevException("Il valore idLotto non e' valido", HttpStatus.BAD_REQUEST);
 		
@@ -186,92 +187,109 @@ public class DerrataDAOImpl implements DerrataDAO
 		if(!optionalTipoDerrata.isPresent())
 			throw new GesevException("Il valore idLotto non e' associato a nessun tipo derrata", HttpStatus.BAD_REQUEST);
 		
-		ColonneDerrataEnum colonnaEnum = null;
-		
-		try 
-		{
-			colonnaEnum = ColonneDerrataEnum.valueOf(colonna.toUpperCase());
-			logger.info("Ricerca della derrata sulla base della colonna " + colonna.toUpperCase() + " e del valore " + value);
-		} 
-		catch (Exception e) 
-		{
-			throw new GesevException("Si e' verificato un errore. " + ExceptionUtils.getStackFrames(e)[0], HttpStatus.BAD_REQUEST);
-		}
-		
-		if(StringUtils.isBlank(value))
-			throw new GesevException("Il valore fornito per la colonna non e' valido", HttpStatus.BAD_REQUEST);
-		
+		/* Crezione della query */
 		logger.info("Composizione della query di ricerca...");
 		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<Derrata> criteriaQuery = criteriaBuilder.createQuery(Derrata.class);
 		Root<Derrata> derrataRoot = criteriaQuery.from(Derrata.class);
-				
+		
 		/* predicato del lotto */ 
 		Join<Derrata, TipoDerrata> derrataJoin = derrataRoot.join("tipoDerrata");
 		
 		/* predicato finale per la ricerca */
-		//where codice = idLotto
-		Predicate finalPredicate = criteriaBuilder.equal(derrataJoin.get("codice"), idLotto); 
-				
-		switch(colonnaEnum)
+		Predicate finalPredicate = criteriaBuilder.equal(derrataJoin.get("codice"), idLotto); 	
+		
+		/* Switch colonna */
+		for(Entry<String, String> entryMap : mappa.entrySet())
 		{
-			case UNITA_MISURA:
-				//where codice = id lotto and unita_misura = ??? 
-				finalPredicate = criteriaBuilder.and(finalPredicate, criteriaBuilder.like(derrataRoot.get(ColonneDerrataEnum.UNITA_MISURA.getclonnaTipoDerrata()), value + "%"));
-				break;
+			ColonneDerrataEnum colonnaEnum = null;
+			String colonna = entryMap.getKey();
+			String value = entryMap.getValue();
+			try 
+			{
+				colonnaEnum = ColonneDerrataEnum.valueOf(colonna.toUpperCase());
+				logger.info("Ricerca della derrata sulla base della colonna " + colonna.toUpperCase() + " e del valore " + value);
+			} 
+			catch (Exception e) 
+			{
+				throw new GesevException("Si e' verificato un errore. " + ExceptionUtils.getStackFrames(e)[0], HttpStatus.BAD_REQUEST);
+			}
+			
+			if(StringUtils.isBlank(value))
+				throw new GesevException("Il valore fornito per la colonna non e' valido", HttpStatus.BAD_REQUEST);
+							
+			switch(colonnaEnum)
+			{
+				case UNITA_MISURA:
+					finalPredicate = criteriaBuilder.and(finalPredicate, criteriaBuilder.like(derrataRoot.get(ColonneDerrataEnum.UNITA_MISURA.getclonnaTipoDerrata()), value + "%"));
+					break;
+					
+				case DESCRIZIONE:
+					finalPredicate = criteriaBuilder.and(finalPredicate, criteriaBuilder.like(derrataRoot.get(ColonneDerrataEnum.DESCRIZIONE.getclonnaTipoDerrata()), value + "%"));
+					break;
 				
-			case DESCRIZIONE:
-				finalPredicate = criteriaBuilder.and(finalPredicate, criteriaBuilder.like(derrataRoot.get(ColonneDerrataEnum.DESCRIZIONE.getclonnaTipoDerrata()), value + "%"));
-				break;
-			
-			case PREZZO:
-				Double prezzo = null;
-				try
-				{
-					prezzo = Double.valueOf(value);
-				}
-				catch(Exception e)
-				{
-					throw new GesevException("Impossibile convertire il valore prezzo", HttpStatus.BAD_REQUEST);
-				}
-				finalPredicate = criteriaBuilder.and(finalPredicate, criteriaBuilder.equal(derrataRoot.get(ColonneDerrataEnum.PREZZO.getclonnaTipoDerrata()), prezzo));
-				break;
-			
-			case GIACENZA:
-				Double giacenza = null;
-				try
-				{
-					giacenza = Double.valueOf(value);
-				}
-				catch(Exception e)
-				{
-					throw new GesevException("Impossibile convertire il valore giacenza", HttpStatus.BAD_REQUEST);
-				}
-				finalPredicate = criteriaBuilder.and(finalPredicate, criteriaBuilder.equal(derrataRoot.get(ColonneDerrataEnum.GIACENZA.getclonnaTipoDerrata()), giacenza));
-				break;
-			
-			case QUANTITA_MINIMA:
-				Double quantitaMinima = null;
-				try
-				{
-					quantitaMinima = Double.valueOf(value);
-				}
-				catch(Exception e)
-				{
-					throw new GesevException("Impossibile convertire il valore giacenza", HttpStatus.BAD_REQUEST);
-				}
-				finalPredicate = criteriaBuilder.and(finalPredicate, criteriaBuilder.equal(derrataRoot.get(ColonneDerrataEnum.QUANTITA_MINIMA.getclonnaTipoDerrata()), quantitaMinima));
-				break;
-			
+				case PREZZO:
+					Double prezzo = null;
+					try
+					{
+						prezzo = Double.valueOf(value);
+					}
+					catch(Exception e)
+					{
+						throw new GesevException("Impossibile convertire il valore prezzo", HttpStatus.BAD_REQUEST);
+					}
+					finalPredicate = criteriaBuilder.and(finalPredicate, criteriaBuilder.equal(derrataRoot.get(ColonneDerrataEnum.PREZZO.getclonnaTipoDerrata()), prezzo));
+					break;
+				
+				case GIACENZA:
+					Double giacenza = null;
+					try
+					{
+						giacenza = Double.valueOf(value);
+					}
+					catch(Exception e)
+					{
+						throw new GesevException("Impossibile convertire il valore giacenza", HttpStatus.BAD_REQUEST);
+					}
+					finalPredicate = criteriaBuilder.and(finalPredicate, criteriaBuilder.equal(derrataRoot.get(ColonneDerrataEnum.GIACENZA.getclonnaTipoDerrata()), giacenza));
+					break;
+				
+				case QUANTITA_MINIMA:
+					Double quantitaMinima = null;
+					try
+					{
+						quantitaMinima = Double.valueOf(value);
+					}
+					catch(Exception e)
+					{
+						throw new GesevException("Impossibile convertire il valore quantita minima", HttpStatus.BAD_REQUEST);
+					}
+					finalPredicate = criteriaBuilder.and(finalPredicate, criteriaBuilder.equal(derrataRoot.get(ColonneDerrataEnum.QUANTITA_MINIMA.getclonnaTipoDerrata()), quantitaMinima));
+					break;
+				
+				case DATA_AGGIORNAMENTO_GIACENZA:
+					Date dataAggiornamento = null;
+					SimpleDateFormat simpleDateFormat = new SimpleDateFormat(this.dateFormat);
+					try
+					{
+						dataAggiornamento = simpleDateFormat.parse(value);
+					}
+					catch(Exception e)
+					{
+						throw new GesevException("Impossibile convertire il valore data aggiornamento giacenza", HttpStatus.BAD_REQUEST);
+					}
+					finalPredicate = criteriaBuilder.and(finalPredicate, criteriaBuilder.equal(derrataRoot.get(ColonneDerrataEnum.DATA_AGGIORNAMENTO_GIACENZA.getclonnaTipoDerrata()).as(java.sql.Date.class), dataAggiornamento));
+					break;
+			}
 		}
 		
 		/* esecuzione query */
 		criteriaQuery.where(finalPredicate);
-		List<Derrata> items = entityManager.createQuery(criteriaQuery).getResultList();
 		
+		List<Derrata> items = entityManager.createQuery(criteriaQuery).getResultList();
 		logger.info("Numero elementi trovati: " + items.size());
 		
 		/* restituzione */
-		return items;
+		return items; 
 	}
 }

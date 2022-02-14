@@ -1,9 +1,10 @@
 package it.gesev.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -95,19 +96,21 @@ public class DerrataServiceImpl implements DerrataService {
 
 	/* Cerca una derrata VEDI!!! */
 	@Override
-	public List<DerrataDTO> cercaTipoDerrataConColonna(RicercaColonnaDTO ricerca, Long idLotto) 
+	public List<DerrataDTO> cercaTipoDerrataConColonna(List<RicercaColonnaDTO> ricerca, Long idLotto) 
 	{
+		List<RicercaColonnaDTO> listaRicerca = ricerca;
 		logger.info("Accesso alla classe DerrateServiceIMPL - metodo cercaTipoDerrataConColonna");
-		
-		List<Derrata> listaDerrata = derrataDAO.cercaTipoDerrataConColonna(ricerca.getColonna(), ricerca.getValue(), idLotto);
+		Map<String, String>	mappaRicerca = new HashMap<>();
+		for(RicercaColonnaDTO rc : listaRicerca )
+		{
+			mappaRicerca.put(rc.getColonna(), rc.getValue());
+		}
+		List<Derrata> listaDerrata = derrataDAO.cercaTipoDerrataConColonna(mappaRicerca, idLotto);
 		List<DerrataDTO> outputList = new ArrayList<>();
 		
-		ModelMapper mapper = new ModelMapper();
 		for(Derrata derrata : listaDerrata)
 			outputList.add(DerrataMapper.mapToDTO(derrata, dateFormat));
-			//outputList.add(mapper.map(derrata, DerrataDTO.class));
 		
 		return outputList;
 	}
-
 }

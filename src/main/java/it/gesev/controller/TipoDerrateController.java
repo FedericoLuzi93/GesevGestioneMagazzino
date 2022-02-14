@@ -145,7 +145,7 @@ public class TipoDerrateController
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK"),
 			@ApiResponse(code = 400, message = "Dati in ingresso non validi"),
 			@ApiResponse(code = 500, message = "Errore interno") })
-	public ResponseEntity<EsitoDTO> cercaTipoDerrataPerColonna(@RequestBody RicercaColonnaDTO ricerca)
+	public ResponseEntity<EsitoDTO> cercaTipoDerrataPerColonna(@RequestBody List<RicercaColonnaDTO> ricerca)
 	{
 		logger.info("Invocato API service cercaPerColonna");
 		
