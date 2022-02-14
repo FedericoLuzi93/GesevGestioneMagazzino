@@ -1,24 +1,21 @@
 package it.gesev.dao;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
-import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Expression;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import javax.persistence.criteria.Subquery;
-import javax.transaction.Transactional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.hibernate.internal.CriteriaImpl.CriterionEntry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -138,21 +135,8 @@ public class FornitoreDAOImpl implements FornitoreDAO {
 	}
 
 	@Override
-	public List<Fornitore> cercaFornitoreConColonna(String colonna, String valore) {
-		
-		logger.info("Controllo esistenza colonna...");
-		ColonneFornitoreEnum colonnaEnum = null;
-		
-		try 
-		{
-			colonnaEnum = ColonneFornitoreEnum.valueOf(colonna.toUpperCase());
-			logger.info("Ricerca dei fornitore sulla base della colonna " + colonna.toUpperCase() + " e del valore " + valore);
-		} 
-		
-		catch (Exception e) 
-		{
-			throw new GesevException("Si e' verificato un errore. " + ExceptionUtils.getStackFrames(e)[0], HttpStatus.BAD_REQUEST);
-		}
+	public List<Fornitore> cercaFornitoreConColonna(Map<String, String> mappaColonne) {
+		logger.info("Ricerca fornitore sulla base delle colonne " + mappaColonne.keySet());
 		
 		logger.info("Composizione della query di ricerca...");
 		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -162,21 +146,46 @@ public class FornitoreDAOImpl implements FornitoreDAO {
 		/* predicato finale per la ricerca */
 		Predicate finalPredicate = null;
 		
-		switch(colonnaEnum)
+		for(String colonna : mappaColonne.keySet())
 		{
-			case CODICE:
-				/* creazione di un'espressione per effettuare LPAD */
-				Expression<String> eTaskID = fornitoreRoot.get(ColonneFornitoreEnum.CODICE.getColonnaFornitore()).as(String.class);
-		        Expression<Integer> length = criteriaBuilder.literal(6);
-		        Expression<String> fillText = criteriaBuilder.literal("0");
-		        Expression<String> expressionToGetPaddedCodice = criteriaBuilder.function("LPAD", String.class, eTaskID, length, fillText);
-		        
-				finalPredicate = criteriaBuilder.like(expressionToGetPaddedCodice, valore + "%");
-				break;
+			try 
+			{
+				ColonneFornitoreEnum colonnaEnum = ColonneFornitoreEnum.valueOf(colonna.toUpperCase());
 				
-			case DESCRIZIONE:
-				finalPredicate = criteriaBuilder.like(fornitoreRoot.get(ColonneFornitoreEnum.DESCRIZIONE.getColonnaFornitore()), valore + "%");
+				switch(colonnaEnum)
+				{
+					case CODICE:
+						/* creazione di un'espressione per effettuare LPAD */
+						Expression<String> eTaskID = fornitoreRoot.get(ColonneFornitoreEnum.CODICE.getColonnaFornitore()).as(String.class);
+				        Expression<Integer> length = criteriaBuilder.literal(6);
+				        Expression<String> fillText = criteriaBuilder.literal("0");
+				        Expression<String> expressionToGetPaddedCodice = criteriaBuilder.function("LPAD", String.class, eTaskID, length, fillText);
+				        
+				        if(finalPredicate == null)
+				        	finalPredicate = criteriaBuilder.like(expressionToGetPaddedCodice, mappaColonne.get(colonna) + "%");
+				        
+				        else 
+				        	finalPredicate = criteriaBuilder.and(finalPredicate, criteriaBuilder.like(expressionToGetPaddedCodice, mappaColonne.get(colonna) + "%"));
+				        
+						break;
+						
+					case DESCRIZIONE:
+						if(finalPredicate == null)
+							finalPredicate = criteriaBuilder.like(fornitoreRoot.get(colonnaEnum.getColonnaFornitore()), mappaColonne.get(colonna) + "%");
+						
+						else
+							finalPredicate = criteriaBuilder.and(finalPredicate, 
+									         criteriaBuilder.like(fornitoreRoot.get(colonnaEnum.getColonnaFornitore()), mappaColonne.get(colonna) + "%"));
+				}
+			} 
+			
+			catch (Exception e) 
+			{
+				throw new GesevException("Errore nei dati forniti per la ricerca", HttpStatus.BAD_REQUEST);
+			}
 		}
+		
+		
 		
 		/* esecuzione query */
 		criteriaQuery.where(finalPredicate);

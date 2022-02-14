@@ -13,7 +13,7 @@ public interface FornitoreService {
 	public List<FornitoreDTO> creaFornitore(String descrizione);
 	public List<FornitoreDTO> cancellaFornitore(Long idFornitore);
 	public List<FornitoreDTO> aggiornaFornitore(FornitoreDTO fornitore);
-	public List<FornitoreDTO> cercaFornitorePerColonna(RicercaColonnaDTO ricerca);
+	public List<FornitoreDTO> cercaFornitorePerColonna(List<RicercaColonnaDTO> ricerca);
 	public RispostaMovimentiDTO cercaDettagliByFornitore(Long idFornitore);
 	public RispostaMovimentiDTO cercaDerrateInTestate(RicercaTestateDTO ricerca);
 }

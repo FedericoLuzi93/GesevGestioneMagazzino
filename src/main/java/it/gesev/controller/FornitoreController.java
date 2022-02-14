@@ -240,7 +240,7 @@ public class FornitoreController
 	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK"),
                            @ApiResponse(responseCode = "400", description = "Dati in ingresso non validi"),
                            @ApiResponse(responseCode = "500", description = "Errore interno")})
-	public ResponseEntity<EsitoDTO> cercaPerColonna(@RequestBody RicercaColonnaDTO ricerca)
+	public ResponseEntity<EsitoDTO> cercaPerColonna(@RequestBody List<RicercaColonnaDTO> ricerca)
 	{
 		logger.info("Invocato API service cercaPerColonna");
 		

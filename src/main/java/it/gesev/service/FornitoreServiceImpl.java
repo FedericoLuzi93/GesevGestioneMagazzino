@@ -4,8 +4,10 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
@@ -27,6 +29,7 @@ import it.gesev.dto.RicercaTestateDTO;
 import it.gesev.dto.RispostaMovimentiDTO;
 import it.gesev.entities.Fornitore;
 import it.gesev.entities.TestataMovimento;
+import it.gesev.enums.ColonneFornitoreEnum;
 import it.gesev.exc.GesevException;
 import it.gesev.utility.ConversionUtils;
 
@@ -123,15 +126,37 @@ public class FornitoreServiceImpl implements FornitoreService {
 	}
 
 	@Override
-	public List<FornitoreDTO> cercaFornitorePerColonna(RicercaColonnaDTO ricerca) {
+	public List<FornitoreDTO> cercaFornitorePerColonna(List<RicercaColonnaDTO> listaRicerca) {
 		logger.info("Avvio del servizio per la ricerca in base alla colonna...");
 		
-		List<Fornitore> listaFornitori = fornitoreDAO.cercaFornitoreConColonna(ricerca.getColonna(), ricerca.getValue());
+		logger.info("Veerifica deei campi inviati...");
+		Map<String, String> mappaCampi = new HashMap<>();
 		List<FornitoreDTO> outputList = new ArrayList<>();
 		
-		ModelMapper mapper = new ModelMapper();
-		for(Fornitore fornitore : listaFornitori)
-			outputList.add(mapper.map(fornitore, FornitoreDTO.class));
+		for(RicercaColonnaDTO ricerca : listaRicerca)
+		{
+			try 
+			{
+				ColonneFornitoreEnum colonna = ColonneFornitoreEnum.valueOf(ricerca.getColonna().toUpperCase());
+				mappaCampi.put(colonna.getColonnaFornitore(), ricerca.getValue());
+			} 
+			
+			catch (Exception e) 
+			{
+				throw new GesevException("I valori forniti per la ricerca non sono validi", HttpStatus.BAD_REQUEST);
+			}
+			
+		}
+		
+		if(mappaCampi.size() > 0)
+		{
+			List<Fornitore> listaFornitori = fornitoreDAO.cercaFornitoreConColonna(mappaCampi);
+			
+			
+			ModelMapper mapper = new ModelMapper();
+			for(Fornitore fornitore : listaFornitori)
+				outputList.add(mapper.map(fornitore, FornitoreDTO.class));
+		}
 		
 		return outputList;
 	}
