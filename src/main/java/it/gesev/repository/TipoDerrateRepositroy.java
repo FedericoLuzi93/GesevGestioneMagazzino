@@ -30,7 +30,6 @@ public interface TipoDerrateRepositroy extends JpaRepository<TipoDerrata, Intege
 	@Query("update TipoDerrata t set t.descrizione =:descrizione where t.codice = :codiceTipoDerrata")
 	void updateByCodice(@Param("descrizione") TipoDerrata tipoDerrata, @Param("codiceTipoDerrata") long codiceTipoDerrata);
 	
-	//@Query("select t from TipoDerrata t where t.descrizione = :descrizione")
 	public Optional<TipoDerrata> findByDescrizione(String descrizione);
 
 }
