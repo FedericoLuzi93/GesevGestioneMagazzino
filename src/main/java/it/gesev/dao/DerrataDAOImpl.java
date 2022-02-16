@@ -30,7 +30,7 @@ import it.gesev.entities.TipoDerrata;
 import it.gesev.enums.ColonneDerrataEnum;
 import it.gesev.exc.GesevException;
 import it.gesev.repository.DerrataRepository;
-import it.gesev.repository.TipoDerrateRepositroy;
+import it.gesev.repository.TipoDerrateRepository;
 
 @Repository
 @Component
@@ -42,7 +42,7 @@ public class DerrataDAOImpl implements DerrataDAO
 	DerrataRepository derrataRepository;
 	
 	@Autowired
-	TipoDerrateRepositroy tipoDerrateRepositroy;
+	TipoDerrateRepository tipoDerrateRepositroy;
 	
 	@PersistenceContext
 	EntityManager entityManager;

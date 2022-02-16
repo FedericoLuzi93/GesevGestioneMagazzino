@@ -25,14 +25,14 @@ import org.springframework.stereotype.Repository;
 import it.gesev.entities.TipoDerrata;
 import it.gesev.enums.ColonneTipoDerrataEnum;
 import it.gesev.exc.GesevException;
-import it.gesev.repository.TipoDerrateRepositroy;
+import it.gesev.repository.TipoDerrateRepository;
 
 @Repository
 @Component
 public class TipoDerrateDAOImpl implements TipoDerrateDAO 
 {
 	@Autowired
-	private TipoDerrateRepositroy tipoDerrateRepositroy;
+	private TipoDerrateRepository tipoDerrateRepositroy;
 	
 	@PersistenceContext
 	EntityManager entityManager;

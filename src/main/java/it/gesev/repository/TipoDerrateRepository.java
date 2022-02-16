@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import it.gesev.entities.TipoDerrata;
 
 
-public interface TipoDerrateRepositroy extends JpaRepository<TipoDerrata, Integer>
+public interface TipoDerrateRepository extends JpaRepository<TipoDerrata, Integer>
 {
 	
 	@Query("select max(codice) from TipoDerrata")
