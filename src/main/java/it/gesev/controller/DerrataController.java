@@ -31,7 +31,6 @@ import it.gesev.service.DerrataService;
 @RequestMapping("/derrata")
 public class DerrataController 
 {
-	//test
 	@Autowired
 	private DerrataService derrataService;
 	

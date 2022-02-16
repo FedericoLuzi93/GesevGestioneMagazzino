@@ -10,11 +10,11 @@
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>it.gesev</groupId>
-	<artifactId>gesev</artifactId>
+	<artifactId>GesevGestioneMagazzino</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
-	<name>gesev</name>
-	<description>Gesev project</description>
+	<name>GesevGestioneMagazzino</name>
+	<description>Gesev Gestione Magazzino</description>
 	<properties>
 		<java.version>1.8</java.version>
 	</properties>
