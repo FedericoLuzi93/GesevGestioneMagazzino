@@ -25,9 +25,9 @@ public class DettaglioPrelevamento
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="DETTAGLIO_PRELEVAMENTO_ID")
-	private Long dettaglioPrelevamentoId;
+	private Integer dettaglioPrelevamentoId;
 
-	@Column(name="DATA")
+	@Column(name="DATA_DETTAGLIO_PRELEVAMENTO")
 	private Date date;
 	
 	@Column(name="QUANTITA")
@@ -48,7 +48,7 @@ public class DettaglioPrelevamento
 		
 	}
 
-	public DettaglioPrelevamento(Long dettaglioPrelevamentoId, Date date, int quantita, int numeroBuono) 
+	public DettaglioPrelevamento(Integer dettaglioPrelevamentoId, Date date, int quantita, int numeroBuono) 
 	{
 		this.dettaglioPrelevamentoId = dettaglioPrelevamentoId;
 		this.date = date;

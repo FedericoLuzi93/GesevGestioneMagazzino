@@ -29,9 +29,9 @@ public class TestataMovimento
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="NUMERO_PROGRESSIVO")
-	private Long numeroProgressivo;
+	private Integer numeroProgressivo;
 	
-	@Column(name="DATA")
+	@Column(name="DATA_TESTATA_MOVIMENTO")
 	private Date data;
 	
 	@Column(name="NUM_ORDINE_LAVORO")

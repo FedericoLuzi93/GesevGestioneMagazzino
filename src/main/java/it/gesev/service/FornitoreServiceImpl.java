@@ -92,7 +92,7 @@ public class FornitoreServiceImpl implements FornitoreService {
 		if(StringUtils.isAllBlank(descrizione))
 			throw new GesevException("Descrizione non valida", HttpStatus.BAD_REQUEST);
 		
-		Long nuovoFornitore = fornitoreDAO.creaFornitore(descrizione);
+		Integer nuovoFornitore = fornitoreDAO.creaFornitore(descrizione);
 		if(nuovoFornitore == null || nuovoFornitore < 1)
 			throw new GesevException("Errore nella creazione del fornitore", HttpStatus.INTERNAL_SERVER_ERROR);
 		

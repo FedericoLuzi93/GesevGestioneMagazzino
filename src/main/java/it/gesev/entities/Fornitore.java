@@ -30,7 +30,7 @@ public class Fornitore implements Serializable
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="CODICE")
-	private Long codice;
+	private Integer codice;
 	
 	@Column(name="DESCRIZIONE")
 	private String descrizione;

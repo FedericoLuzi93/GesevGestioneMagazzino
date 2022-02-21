@@ -11,5 +11,5 @@ import it.gesev.entities.TestataMovimento;
 public interface TestataMovimentoRepository extends JpaRepository<TestataMovimento,Long> 
 {
 	@Query("select tm from TestataMovimento tm where tm.fornitore.codice = :idFornitore")
-	public List<TestataMovimento> getTestataMovimentoByIdFornitore(@Param("idFornitore") Long idFornitore);
+	public List<TestataMovimento> getTestataMovimentoByIdFornitore(@Param("idFornitore")Integer idFornitore);
 }

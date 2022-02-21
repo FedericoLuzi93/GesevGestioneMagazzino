@@ -91,7 +91,7 @@ public class DerrataServiceImpl implements DerrataService {
 		}
 		logger.info("Fine del metodo aggiornaDerrata - aggiornamento in corso...");
 		derrataDAO.aggiornaDerrata(derrata, idDerrata);
-		return derrata.getDerrataId();
+		return Long.valueOf(derrata.getDerrataId());
 	}
 
 	/* Cerca una derrata VEDI!!! */

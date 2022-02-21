@@ -23,7 +23,7 @@ public class Ente
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="CODICE_ACED")
-	private Long codiceACED;
+	private String codiceACED;
 	
 	@OneToMany(mappedBy="ente", cascade={CascadeType.PERSIST, CascadeType.DETACH,
 		 	CascadeType.MERGE, CascadeType.REFRESH})
@@ -35,7 +35,7 @@ public class Ente
 	}
 
 	/* costruttore con argomennto */
-	public Ente(Long codiceACED) 
+	public Ente(String codiceACED) 
 	{
 		this.codiceACED = codiceACED;
 	}

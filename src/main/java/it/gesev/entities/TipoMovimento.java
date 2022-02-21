@@ -23,7 +23,7 @@ public class TipoMovimento
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="CODICE")
-	private Long codice;
+	private Integer codice;
 	
 	@Column(name="TIPO_DESCRIZIONE")
 	private String descrizione;
@@ -39,7 +39,7 @@ public class TipoMovimento
 		
 	}
 
-	public TipoMovimento(Long codice, String descrizione, String segno) 
+	public TipoMovimento(Integer codice, String descrizione, String segno) 
 	{
 		this.codice = codice;
 		this.descrizione = descrizione;

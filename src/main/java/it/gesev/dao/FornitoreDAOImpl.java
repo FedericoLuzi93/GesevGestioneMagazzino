@@ -42,7 +42,7 @@ public class FornitoreDAOImpl implements FornitoreDAO {
 	public Fornitore getFornitoreByCodice(Long codice) 
 	{
 		logger.info("Ricerca fornitore con codice " + codice);
-		Optional<Fornitore> optionalFornitore = fornitoreRepository.findById(codice);
+		Optional<Fornitore> optionalFornitore = fornitoreRepository.findById(codice.intValue());
 		if(optionalFornitore.isPresent())
 			return optionalFornitore.get();
 		
@@ -59,7 +59,7 @@ public class FornitoreDAOImpl implements FornitoreDAO {
 	}
 
 	@Override
-	public Long creaFornitore(String descrizione) 
+	public Integer creaFornitore(String descrizione) 
 	{
 		logger.info("Creazione nuovo fornitore con descrizione: " + descrizione);
 		if(StringUtils.isBlank(descrizione))
@@ -87,7 +87,7 @@ public class FornitoreDAOImpl implements FornitoreDAO {
 		logger.info("Cancellazione fornitore con ID " + idFornitore);
 		
 		logger.info("Ricerca fornitore con ID scpecificato...");
-		Optional<Fornitore> fornitoreOpt = fornitoreRepository.findById(idFornitore);
+		Optional<Fornitore> fornitoreOpt = fornitoreRepository.findById(idFornitore.intValue());
 		if(!fornitoreOpt.isPresent())
 			throw new GesevException("Nessun fornitore trovato con l'ID specificato", HttpStatus.BAD_REQUEST);
 		

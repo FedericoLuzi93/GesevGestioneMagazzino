@@ -24,7 +24,7 @@ public class TipoDerrata
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="CODICE")
-	private Long codice;
+	private Integer codice;
 	
 	@Column(name="DESCRIZIONE")
 	private String descrizione;
@@ -37,7 +37,7 @@ public class TipoDerrata
 		
 	}
 
-	public TipoDerrata(Long codice, String descrizione) 
+	public TipoDerrata(Integer codice, String descrizione) 
 	{
 		this.codice = codice;
 		this.descrizione = descrizione;

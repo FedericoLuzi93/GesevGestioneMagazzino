@@ -25,9 +25,9 @@ public class DettaglioMovimento
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="ID_DETTAGLIO_MOVIMENTO ")
-	private Long idDettaglioMovimento;
+	private Integer idDettaglioMovimento;
 	
-	@Column(name="DATA")
+	@Column(name="DATA_DETTAGLIO_MOVIMENTO")
 	private Date date;
 	
 	@Column(name="QUANTITA_RICHIESTA")
@@ -57,7 +57,7 @@ public class DettaglioMovimento
 		
 	}
 
-	public DettaglioMovimento(Long idDettaglioMovimento, Date date, double quantitaRichiesta, double quantitaEffettiva,
+	public DettaglioMovimento(Integer idDettaglioMovimento, Date date, double quantitaRichiesta, double quantitaEffettiva,
 			double prezzoUnitario, double totaleValore) 
 	{
 		this.idDettaglioMovimento = idDettaglioMovimento;

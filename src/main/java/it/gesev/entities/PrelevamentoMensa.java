@@ -23,9 +23,9 @@ public class PrelevamentoMensa
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="NUMERO_BUONO")
-	private Long numeroBuono;
+	private Integer numeroBuono;
 	
-	@Column(name="DATA")
+	@Column(name="DATA_PRELEVAMENTO_MENSA")
 	private Date date;
 	
 	//Nome Entita nell'altra tabella
@@ -38,7 +38,7 @@ public class PrelevamentoMensa
 		
 	}
 
-	public PrelevamentoMensa(Long numeroBuono, Date date) 
+	public PrelevamentoMensa(Integer numeroBuono, Date date) 
 	{
 		this.numeroBuono = numeroBuono;
 		this.date = date;

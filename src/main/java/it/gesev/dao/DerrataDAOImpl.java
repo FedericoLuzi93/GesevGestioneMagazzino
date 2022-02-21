@@ -55,7 +55,7 @@ public class DerrataDAOImpl implements DerrataDAO
 	public List<Derrata> getAllDerrata(long tipoDerrataId) 
 	{
 		logger.info("Rierca di tutte le Derrate presenti sul database");
-		return derrataRepository.findAllByDerrataId(tipoDerrataId);
+		return derrataRepository.findAllByDerrataId((int)tipoDerrataId);
 	}
 
 	/* Crea la Derrata */
@@ -102,7 +102,7 @@ public class DerrataDAOImpl implements DerrataDAO
 			
 		derrataRepository.save(derrataObj);
 		
-		return derrataObj.getDerrataId();
+		return Long.valueOf(derrataObj.getDerrataId());
 	}
 
 	/* Cancellazione derrata */
@@ -111,7 +111,7 @@ public class DerrataDAOImpl implements DerrataDAO
 	{
 		logger.info("Accesso alla classe DerrataDAOImpl - Cancellazione deleteDerrata con ID " + derrataId);
 		logger.info("Ricerca derrata con ID scpecificato...");
-		Optional<Derrata> optionalDerrata = derrataRepository.findById(derrataId);
+		Optional<Derrata> optionalDerrata = derrataRepository.findById(derrataId.intValue());
 		if(!optionalDerrata.isPresent())
 			throw new GesevException("Nessuna derrata trovato con l'ID specificato", HttpStatus.BAD_REQUEST);
 		
@@ -153,7 +153,7 @@ public class DerrataDAOImpl implements DerrataDAO
 			derrataMom = optionalDerrata.get();
 		else
 		{
-			Optional<Derrata> derrataCercata = derrataRepository.findById(derrata.getDerrataId());
+			Optional<Derrata> derrataCercata = derrataRepository.findById(derrata.getDerrataId().intValue());
 			if(derrataCercata.isPresent())
 				derrataMom = derrataCercata.get();
 		}
@@ -169,7 +169,7 @@ public class DerrataDAOImpl implements DerrataDAO
 		derrataRepository.save(derrataMom);
 		
 		logger.info("Fine aggiornamento");
-		return derrata.getDerrataId();
+		return Long.valueOf(derrata.getDerrataId());
 	}
 	
 	/* Derrata per un Lotto */
