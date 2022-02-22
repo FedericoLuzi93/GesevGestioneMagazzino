@@ -8,8 +8,8 @@ import it.gesev.dto.TipoDerrataDTO;
 public interface TipoDerrateService 
 {
 	public List<TipoDerrataDTO> leggiTuttiTipiDerrate();
-	public long createTipoDerrata(TipoDerrataDTO tipoDerrataDTO);
-	public long deleteTipoDerrata(long codiceTipoDerrata);
-	public long updateTipoDerrata(int codiceTipoDerrata, TipoDerrataDTO tipoDerrataDTO);
+	public int createTipoDerrata(TipoDerrataDTO tipoDerrataDTO);
+	public int deleteTipoDerrata(int codiceTipoDerrata);
+	public int updateTipoDerrata(int codiceTipoDerrata, TipoDerrataDTO tipoDerrataDTO);
 	public List<TipoDerrataDTO> cercaTipoDerrataConColonna(List<RicercaColonnaDTO> ricerca);
 }

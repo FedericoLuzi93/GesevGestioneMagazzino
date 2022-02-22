@@ -18,17 +18,17 @@ public interface TipoDerrateRepository extends JpaRepository<TipoDerrata, Intege
 	public Integer getMaxCodice();
 	
 	@Query("select t from TipoDerrata t where t.codice = :codiceTipoDerrata")
-	public Optional<TipoDerrata> findByCodice(long codiceTipoDerrata);
+	public Optional<TipoDerrata> findByCodice(int codiceTipoDerrata);
 	
 	@Transactional
 	@Modifying
 	@Query("delete from TipoDerrata t where t.codice = :codiceTipoDerrata")
-	void deleteByCodice(@Param("codiceTipoDerrata") long codiceTipoDerrata);
+	void deleteByCodice(@Param("codiceTipoDerrata") int codiceTipoDerrata);
 	
 	@Transactional
 	@Modifying
 	@Query("update TipoDerrata t set t.descrizione =:descrizione where t.codice = :codiceTipoDerrata")
-	void updateByCodice(@Param("descrizione") TipoDerrata tipoDerrata, @Param("codiceTipoDerrata") long codiceTipoDerrata);
+	void updateByCodice(@Param("descrizione") TipoDerrata tipoDerrata, @Param("codiceTipoDerrata") int codiceTipoDerrata);
 	
 	public Optional<TipoDerrata> findByDescrizione(String descrizione);
 

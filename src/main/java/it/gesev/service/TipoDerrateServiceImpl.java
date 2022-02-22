@@ -43,7 +43,7 @@ public class TipoDerrateServiceImpl implements TipoDerrateService
 	}
 
 	/* Crea un tipo derrata */
-	public long createTipoDerrata(TipoDerrataDTO tipoDerrataDTO) 
+	public int createTipoDerrata(TipoDerrataDTO tipoDerrataDTO) 
 	{
 		TipoDerrata tipoDerrata = null;
 		try
@@ -61,16 +61,16 @@ public class TipoDerrateServiceImpl implements TipoDerrateService
 	}
 
 	/* Cancella un tipo derrata by Codice */
-	public long deleteTipoDerrata(long codiceTipoDerrata) 
+	public int deleteTipoDerrata(int codiceTipoDerrata) 
 	{
 		logger.info("Accesso alla classe TipODerrateServiceIMPL - metodo deleteTipoDerrata");
 		tipoDerrateDAO.deleteTipoDerrata(codiceTipoDerrata);
 		logger.info("Accesso alla classe TipODerrateServiceIMPL - Fine del metodo deleteTipoDerrata");
-		return 1;
+		return codiceTipoDerrata;
 	}
 
 	/* Update un tipo derrata */
-	public long updateTipoDerrata(int codiceTipoDerrata, TipoDerrataDTO tipoDerrataDTO) 
+	public int updateTipoDerrata(int codiceTipoDerrata, TipoDerrataDTO tipoDerrataDTO) 
 	{
 		TipoDerrata tipoDerrata = null;
 		try

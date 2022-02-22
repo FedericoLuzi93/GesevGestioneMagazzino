@@ -83,7 +83,7 @@ public class TipoDerrateController
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK"),
 			@ApiResponse(code = 400, message = "Dati in ingresso non validi"),
 			@ApiResponse(code = 500, message = "Errore interno") })
-	public ResponseEntity<EsitoDTO> deleteTipoDerrata(@PathVariable long codiceTipoDerrata)
+	public ResponseEntity<EsitoDTO> deleteTipoDerrata(@PathVariable int codiceTipoDerrata)
 	{
 		logger.info("Accesso alla classe TipoDerrateController - metodo deleteTipoDerrata");
 		EsitoDTO esito = new EsitoDTO();
