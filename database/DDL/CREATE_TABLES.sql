@@ -25,14 +25,17 @@ CREATE TABLE PRELEVAMENTO_MENSA
 	DATA_PRELEVAMENTO_MENSA TIMESTAMP
 );
 
-CREATE TABLE DETTAGLIO_PRELEVAMENTO
-(
-	NUMERO_BUONO INT REFERENCES PREVEVAMENTO_MENSA(NUMERO_BUONO), 
-	DATA_DETTAGLIO_PRELEVAMENTO TIMESTAMP,
-	DERRATA INT REFERENCES DERRATA(DERRATA_ID),
-	QUANTITA INT,
-    PRIMARY KEY(NUMERO_BUONO)
+CREATE TABLE dettaglio_prelevamento (
+	numero_buono int4 NOT NULL,
+	data_dettaglio_prelevamento timestamp NULL,
+	derrata int4 NULL,
+	quantita int4 NULL,
+	dettaglio_prelevamento_id serial4 NOT NULL,
+	CONSTRAINT dettaglio_prelevamento_pkey PRIMARY KEY (dettaglio_prelevamento_id)
 );
+
+ALTER TABLE dettaglio_prelevamento ADD CONSTRAINT dettaglio_prelevamento_derrata_fkey FOREIGN KEY (derrata) REFERENCES derrata(derrata_id);
+ALTER TABLE dettaglio_prelevamento ADD CONSTRAINT dettaglio_prelevamento_numero_buono_fkey FOREIGN KEY (numero_buono) REFERENCES prelevamento_mensa(numero_buono);
 
 CREATE TABLE TIPO_MOVIMENTO
 (
@@ -43,7 +46,7 @@ CREATE TABLE TIPO_MOVIMENTO
 
 CREATE TABLE ENTE
 (
-	CODICE_ACED VARCHAR(256) PRIMARY KEY 
+	CODICE_ACED VARCHAR(6) PRIMARY KEY 
 );
 
 CREATE TABLE FORNITORE
