@@ -47,7 +47,7 @@ public class TipoDerrateDAOImpl implements TipoDerrateDAO
 	}
 
 	/* Crea una nuova derrata */
-	public long createTipoDerrata(TipoDerrata tipoDerrata) 
+	public int createTipoDerrata(TipoDerrata tipoDerrata) 
 	{
 		logger.info("Accesso al TipoDerrateDAO metodo createTipoDerrata");
 		if(StringUtils.isBlank(tipoDerrata.getDescrizione()))
@@ -69,7 +69,7 @@ public class TipoDerrateDAOImpl implements TipoDerrateDAO
 	}
 
 	/* Cancella una Derrata by codice */
-	public long deleteTipoDerrata(long codiceTipoDerrata) 
+	public int deleteTipoDerrata(int codiceTipoDerrata) 
 	{
 		logger.info("Accesso al TipoDerrateDAO metodo deleteTipoDerrata");
 		Integer maxCodice = tipoDerrateRepositroy.getMaxCodice();
@@ -101,7 +101,7 @@ public class TipoDerrateDAOImpl implements TipoDerrateDAO
 	}
 
 	/* Aggiorna un tipo derrata */
-	public long updateTipoDerrata(long codiceTipoDerrata, TipoDerrata tipoDerrata) 
+	public int updateTipoDerrata(int codiceTipoDerrata, TipoDerrata tipoDerrata) 
 	{
 		logger.info("Accesso al TipoDerrateDAO metodo updateTipoDerrata");
 		Integer maxCodice = tipoDerrateRepositroy.getMaxCodice();
@@ -136,7 +136,7 @@ public class TipoDerrateDAOImpl implements TipoDerrateDAO
 			tipoDerrateRepositroy.save(tipoDerrata);
 			logger.info("Modifica del tipo derrata con codice " + codiceTipoDerrata + " riuscita");	
 		}
-		return 1;
+		return codiceTipoDerrata;
 	}
 	
 	/* Cerca una derrata */

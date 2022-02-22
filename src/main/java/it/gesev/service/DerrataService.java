@@ -7,9 +7,9 @@ import it.gesev.dto.RicercaColonnaDTO;
 
 public interface DerrataService 
 {
-	public List<DerrataDTO> getAllDerrata(long tipoDerrataId);
-	public Long creaDerrata(DerrataDTO derrataDTO);
-	public Long deleteDerrata(Long derrataId);
-	public Long aggiornaDerrata(DerrataDTO derrataDTO, Long idDerrata);
-	public List<DerrataDTO> cercaTipoDerrataConColonna(List<RicercaColonnaDTO> ricerca, Long idLotto);
+	public List<DerrataDTO> getAllDerrata(int tipoDerrataId);
+	public int creaDerrata(DerrataDTO derrataDTO);
+	public int deleteDerrata(int derrataId);
+	public int aggiornaDerrata(DerrataDTO derrataDTO, int idDerrata);
+	public List<DerrataDTO> cercaTipoDerrataConColonna(List<RicercaColonnaDTO> ricerca, int idLotto);
 }

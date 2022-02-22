@@ -43,7 +43,7 @@ public class DerrataController
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK"),
 			@ApiResponse(code = 400, message = "Dati in ingresso non validi"),
 			@ApiResponse(code = 500, message = "Errore interno") })
-	public ResponseEntity<EsitoDTO> leggiTutteDerrata(@PathVariable long tipoDerrataId)
+	public ResponseEntity<EsitoDTO> leggiTutteDerrata(@PathVariable int tipoDerrataId)
 	{
 		logger.info("Invocato API service leggiTutteDerrata");
 		EsitoDTO esito = new EsitoDTO();
@@ -106,7 +106,7 @@ public class DerrataController
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK"),
 			@ApiResponse(code = 400, message = "Dati in ingresso non validi"),
 			@ApiResponse(code = 500, message = "Errore interno") })
-	public ResponseEntity<EsitoDTO> deleteTipoDerrata(@PathVariable long derrataId)
+	public ResponseEntity<EsitoDTO> deleteTipoDerrata(@PathVariable int derrataId)
 	{
 		logger.info("Invocato API service derrataId");
 		EsitoDTO esito = new EsitoDTO();
@@ -137,7 +137,7 @@ public class DerrataController
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK"),
 			@ApiResponse(code = 400, message = "Dati in ingresso non validi"),
 			@ApiResponse(code = 500, message = "Errore interno") })
-	public ResponseEntity<EsitoDTO> aggiornaDerrata(@RequestBody DerrataDTO derrataDTO, @PathVariable Long idDerrata)
+	public ResponseEntity<EsitoDTO> aggiornaDerrata(@RequestBody DerrataDTO derrataDTO, @PathVariable int idDerrata)
 	{
 		logger.info("Invocato API service updateDerrata");
 		EsitoDTO esito = new EsitoDTO();
@@ -168,7 +168,7 @@ public class DerrataController
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK"),
 			@ApiResponse(code = 400, message = "Dati in ingresso non validi"),
 			@ApiResponse(code = 500, message = "Errore interno") })
-	public ResponseEntity<EsitoDTO> cercaDerrataPerColonna(@RequestBody List<RicercaColonnaDTO> ricerca, @PathVariable Long idLotto)
+	public ResponseEntity<EsitoDTO> cercaDerrataPerColonna(@RequestBody List<RicercaColonnaDTO> ricerca, @PathVariable int idLotto)
 	{
 		logger.info("Invocato API service cercaPerColonna");
 		EsitoDTO esito = new EsitoDTO();

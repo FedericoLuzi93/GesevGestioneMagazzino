@@ -31,7 +31,7 @@ public class DerrataServiceImpl implements DerrataService {
 	private static final Logger logger = LoggerFactory.getLogger(DerrataServiceImpl.class);
 	
 	/* Leggi tutte le Derrata */
-	public List<DerrataDTO> getAllDerrata(long tipoDerrataId) 
+	public List<DerrataDTO> getAllDerrata(int tipoDerrataId) 
 	{
 		logger.info("Acceso alla classe DerrataServiceImpl - metodo getAllDerrata");
 		List<Derrata> listaDerrata = derrataDAO.getAllDerrata(tipoDerrataId);
@@ -47,7 +47,7 @@ public class DerrataServiceImpl implements DerrataService {
 
 	/* Create nuova derrata */
 	@Override
-	public Long creaDerrata(DerrataDTO derrataDTO) 
+	public int creaDerrata(DerrataDTO derrataDTO) 
 	{
 		Derrata derrata = null;
 		try
@@ -66,7 +66,7 @@ public class DerrataServiceImpl implements DerrataService {
 
 	/* Cancella una derrata */
 	@Override
-	public Long deleteDerrata(Long derrataId) 
+	public int deleteDerrata(int derrataId) 
 	{
 		logger.info("Accesso alla classe DerrataServiceImpl - metodo deleteDerrata");
 		derrataDAO.deleteDerrata(derrataId);
@@ -76,7 +76,7 @@ public class DerrataServiceImpl implements DerrataService {
 
 	/* Aggiorna una derrata */
 	@Override
-	public Long aggiornaDerrata(DerrataDTO derrataDTO, Long idDerrata) 
+	public int aggiornaDerrata(DerrataDTO derrataDTO, int idDerrata) 
 	{
 		Derrata derrata = null;
 		try
@@ -91,12 +91,12 @@ public class DerrataServiceImpl implements DerrataService {
 		}
 		logger.info("Fine del metodo aggiornaDerrata - aggiornamento in corso...");
 		derrataDAO.aggiornaDerrata(derrata, idDerrata);
-		return Long.valueOf(derrata.getDerrataId());
+		return derrata.getDerrataId();
 	}
 
 	/* Cerca una derrata VEDI!!! */
 	@Override
-	public List<DerrataDTO> cercaTipoDerrataConColonna(List<RicercaColonnaDTO> ricerca, Long idLotto) 
+	public List<DerrataDTO> cercaTipoDerrataConColonna(List<RicercaColonnaDTO> ricerca, int idLotto) 
 	{
 		List<RicercaColonnaDTO> listaRicerca = ricerca;
 		logger.info("Accesso alla classe DerrateServiceIMPL - metodo cercaTipoDerrataConColonna");
@@ -113,4 +113,6 @@ public class DerrataServiceImpl implements DerrataService {
 		
 		return outputList;
 	}
+
+
 }

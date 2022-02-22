@@ -52,7 +52,7 @@ public class DerrataDAOImpl implements DerrataDAO
 	
 	/* Cerca tutte le derrata */
 	@Override
-	public List<Derrata> getAllDerrata(long tipoDerrataId) 
+	public List<Derrata> getAllDerrata(int tipoDerrataId) 
 	{
 		logger.info("Rierca di tutte le Derrate presenti sul database");
 		return derrataRepository.findAllByDerrataId((int)tipoDerrataId);
@@ -60,7 +60,7 @@ public class DerrataDAOImpl implements DerrataDAO
 
 	/* Crea la Derrata */
 	@Override
-	public Long creaDerrata(Derrata derrata, int codiceTipoDerrata) 
+	public int creaDerrata(Derrata derrata, int codiceTipoDerrata) 
 	{
 		Optional<TipoDerrata> optionalTipoDerrata = tipoDerrateRepositroy.findByCodice(codiceTipoDerrata);
 		if(!optionalTipoDerrata.isPresent())
@@ -102,16 +102,16 @@ public class DerrataDAOImpl implements DerrataDAO
 			
 		derrataRepository.save(derrataObj);
 		
-		return Long.valueOf(derrataObj.getDerrataId());
+		return derrataObj.getDerrataId();
 	}
 
 	/* Cancellazione derrata */
 	@Override
-	public Long deleteDerrata(Long derrataId) 
+	public int deleteDerrata(int derrataId) 
 	{
 		logger.info("Accesso alla classe DerrataDAOImpl - Cancellazione deleteDerrata con ID " + derrataId);
 		logger.info("Ricerca derrata con ID scpecificato...");
-		Optional<Derrata> optionalDerrata = derrataRepository.findById(derrataId.intValue());
+		Optional<Derrata> optionalDerrata = derrataRepository.findById(derrataId);
 		if(!optionalDerrata.isPresent())
 			throw new GesevException("Nessuna derrata trovato con l'ID specificato", HttpStatus.BAD_REQUEST);
 		
@@ -126,7 +126,7 @@ public class DerrataDAOImpl implements DerrataDAO
 
 	/* Aggiorna Derrata */
 	@Override
-	public Long aggiornaDerrata(Derrata derrata, Long idDerrata)
+	public int aggiornaDerrata(Derrata derrata, int idDerrata)
 	{
 		logger.info("Accesso alla classe DerrataDAOImpl metodo aggiornaDerrata");
 		
@@ -169,18 +169,18 @@ public class DerrataDAOImpl implements DerrataDAO
 		derrataRepository.save(derrataMom);
 		
 		logger.info("Fine aggiornamento");
-		return Long.valueOf(derrata.getDerrataId());
+		return derrata.getDerrataId();
 	}
 	
 	/* Derrata per un Lotto */
 	@Override
-	public List<Derrata> cercaTipoDerrataConColonna(Map<String, String> mappa, Long idLotto)
+	public List<Derrata> cercaTipoDerrataConColonna(Map<String, String> mappa, int idLotto)
 	{
 		
 		logger.info("Controllo esistenza Derrata...");
 	
 		/* Controllo idLotto */
-		if(idLotto == null)
+		if(idLotto == 0)
 			throw new GesevException("Il valore idLotto non e' valido", HttpStatus.BAD_REQUEST);
 		
 		Optional<TipoDerrata> optionalTipoDerrata = tipoDerrateRepositroy.findByCodice(idLotto);
