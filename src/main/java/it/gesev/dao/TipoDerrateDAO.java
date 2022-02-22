@@ -10,6 +10,6 @@ public interface TipoDerrateDAO
 	public List<TipoDerrata> leggiTuttiTipiDerrate();
 	public long createTipoDerrata(TipoDerrata tipoDerrata);
 	public long deleteTipoDerrata(long codiceTipoDerrata);
-	public long updateTipoDerrata(long codiceTipoDerrata, TipoDerrata tipoDerrata);
+	public long updateTipoDerrata(int codiceTipoDerrata, TipoDerrata tipoDerrata);
 	public List<TipoDerrata> cercaTipoDerrataConColonna(Map<String, String> mappa);
 }

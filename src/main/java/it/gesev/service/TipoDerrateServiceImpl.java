@@ -70,7 +70,7 @@ public class TipoDerrateServiceImpl implements TipoDerrateService
 	}
 
 	/* Update un tipo derrata */
-	public long updateTipoDerrata(long codiceTipoDerrata, TipoDerrataDTO tipoDerrataDTO) 
+	public long updateTipoDerrata(int codiceTipoDerrata, TipoDerrataDTO tipoDerrataDTO) 
 	{
 		TipoDerrata tipoDerrata = null;
 		try

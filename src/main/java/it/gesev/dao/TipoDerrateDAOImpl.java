@@ -101,7 +101,7 @@ public class TipoDerrateDAOImpl implements TipoDerrateDAO
 	}
 
 	/* Aggiorna un tipo derrata */
-	public long updateTipoDerrata(long codiceTipoDerrata, TipoDerrata tipoDerrata) 
+	public long updateTipoDerrata(int codiceTipoDerrata, TipoDerrata tipoDerrata) 
 	{
 		logger.info("Accesso al TipoDerrateDAO metodo updateTipoDerrata");
 		Integer maxCodice = tipoDerrateRepositroy.getMaxCodice();
