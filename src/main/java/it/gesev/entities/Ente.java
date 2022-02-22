@@ -8,6 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -28,6 +30,15 @@ public class Ente
 	@OneToMany(mappedBy="ente", cascade={CascadeType.PERSIST, CascadeType.DETACH,
 		 	CascadeType.MERGE, CascadeType.REFRESH})
 	private List<TestataMovimento> testataMovimento;
+	
+	@ManyToOne( cascade={CascadeType.PERSIST, CascadeType.DETACH,
+		 	CascadeType.MERGE, CascadeType.REFRESH})
+	@JoinColumn(name = "ente_riferimento")
+	private Ente enteRiferimento;
+	
+	@OneToMany(mappedBy = "enteRiferimento", cascade={CascadeType.PERSIST, CascadeType.DETACH,
+		 	CascadeType.MERGE, CascadeType.REFRESH})
+	private List<Ente> listaEnti;
 	
 	public Ente()
 	{
