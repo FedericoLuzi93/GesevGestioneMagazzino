@@ -44,10 +44,18 @@ CREATE TABLE TIPO_MOVIMENTO
 	SEGNO VARCHAR(1)
 );
 
-CREATE TABLE ENTE
+CREATE TABLE ente 
 (
-	CODICE_ACED VARCHAR(6) PRIMARY KEY 
+	codice_aced varchar(256) NOT NULL,
+	ente_riferimento int4 NULL,
+	mensa_fk int4 NULL,
+	descrizione_ente varchar(256) NULL,
+	id_ente serial4 NOT NULL,
+	CONSTRAINT ente_pkey PRIMARY KEY (id_ente)
 );
+
+ALTER TABLE public.ente ADD CONSTRAINT ente_fk FOREIGN KEY (ente_riferimento) REFERENCES public.ente(id_ente);
+ALTER TABLE public.ente ADD CONSTRAINT ente_mensa_fk_fkey FOREIGN KEY (mensa_fk) REFERENCES public.mensa(codice_mensa);
 
 CREATE TABLE FORNITORE
 (
@@ -55,18 +63,23 @@ CREATE TABLE FORNITORE
 	DESCRIZIONE VARCHAR(256) NOT NULL
 );
 
-CREATE TABLE TESTATA_MOVIMENTO
+CREATE TABLE testata_movimento 
 (
-	NUMERO_PROGRESSIVO SERIAL PRIMARY KEY,
-	DATA_TESTATA_MOVIMENTO TIMESTAMP,
-	TIPO_MOVIMENTO INT REFERENCES TIPO_MOVIMENTO(CODICE),
-	CODICE_FORNITORE INT REFERENCES FORNITORE(CODICE),
-	CODICE_ENTE VARCHAR(256) REFERENCES ENTE(CODICE_ACED),
-	NUM_ORDINE_LAVORO INT,
-	NOTA VARCHAR(256),
-	TOTALE_IMPORTO DECIMAL(10,2),
-	UTENTE_OPERATORE VARCHAR(256)
+	numero_progressivo serial4 NOT NULL,
+	data_testata_movimento timestamp NULL,
+	tipo_movimento int4 NULL,
+	codice_fornitore int4 NULL,
+	codice_ente int4 NULL,
+	num_ordine_lavoro int4 NULL,
+	nota varchar(256) NULL,
+	totale_importo numeric(10, 2) NULL,
+	utente_operatore varchar(256) NULL,
+	CONSTRAINT testata_movimento_pkey PRIMARY KEY (numero_progressivo)
 );
+
+ALTER TABLE public.testata_movimento ADD CONSTRAINT ente_fk FOREIGN KEY (codice_ente) REFERENCES ente(id_ente);
+ALTER TABLE public.testata_movimento ADD CONSTRAINT testata_movimento_codice_fornitore_fkey FOREIGN KEY (codice_fornitore) REFERENCES fornitore(codice);
+ALTER TABLE public.testata_movimento ADD CONSTRAINT testata_movimento_tipo_movimento_fkey FOREIGN KEY (tipo_movimento) REFERENCES tipo_movimento(codice);
 
 CREATE TABLE DETTAGLIO_MOVIMENTO
 (
