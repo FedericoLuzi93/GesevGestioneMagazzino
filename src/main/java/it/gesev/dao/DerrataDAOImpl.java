@@ -65,8 +65,8 @@ public class DerrataDAOImpl implements DerrataDAO
 		Optional<TipoDerrata> optionalTipoDerrata = tipoDerrateRepositroy.findByCodice(codiceTipoDerrata);
 		if(!optionalTipoDerrata.isPresent())
 		{
-			logger.info("Impossibile creare una derrata. Tipo derrata non presente");
-			throw new GesevException("Impossibile creare una derrata. Tipo derrata non presente", HttpStatus.BAD_REQUEST);
+			logger.info("Impossibile creare una derrata. Lotto non presente");
+			throw new GesevException("Impossibile creare una derrata. Lotto non presente", HttpStatus.BAD_REQUEST);
 		}
 		
 		logger.info("Creazione nuova derrata in corso...");
@@ -186,7 +186,7 @@ public class DerrataDAOImpl implements DerrataDAO
 		
 		Optional<TipoDerrata> optionalTipoDerrata = tipoDerrateRepositroy.findByCodice(idLotto);
 		if(!optionalTipoDerrata.isPresent())
-			throw new GesevException("Il valore idLotto non e' associato a nessun tipo derrata", HttpStatus.BAD_REQUEST);
+			throw new GesevException("Il valore idLotto non e' associato a nessun lotto", HttpStatus.BAD_REQUEST);
 		
 		/* Crezione della query */
 		logger.info("Composizione della query di ricerca...");

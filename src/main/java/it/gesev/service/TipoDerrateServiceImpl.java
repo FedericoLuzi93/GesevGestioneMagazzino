@@ -54,7 +54,7 @@ public class TipoDerrateServiceImpl implements TipoDerrateService
 		catch(GesevException exc)
 		{
 			logger.info("Eccezione nel servizio createTipoDerrata" + exc);
-			throw new GesevException("Non è stato possibile inserire il TipoDerrata" + exc, HttpStatus.BAD_REQUEST);
+			throw new GesevException("Non è stato possibile inserire il lotto" + exc, HttpStatus.BAD_REQUEST);
 		}
 		logger.info("Accesso alla classe TipODerrateServiceIMPL - Fine del metodo createTipoDerrata");
 		return tipoDerrateDAO.createTipoDerrata(tipoDerrata);
@@ -81,7 +81,7 @@ public class TipoDerrateServiceImpl implements TipoDerrateService
 		catch(GesevException exc)
 		{
 			logger.info("Eccezione nel servizio updateTipoDerrata" + exc);
-			throw new GesevException("Non è stato possibile modificare il TipoDerrata" + exc, HttpStatus.BAD_REQUEST);
+			throw new GesevException("Non è stato possibile modificare il lotto" + exc, HttpStatus.BAD_REQUEST);
 		}
 		logger.info("Accesso alla classe TipODerrateServiceIMPL - Fine del metodo updateTipoDerrata");
 		return tipoDerrateDAO.updateTipoDerrata(codiceTipoDerrata, tipoDerrata);

@@ -52,19 +52,19 @@ public class TipoDerrateDAOImpl implements TipoDerrateDAO
 		logger.info("Accesso al TipoDerrateDAO metodo createTipoDerrata");
 		if(StringUtils.isBlank(tipoDerrata.getDescrizione()))
 		{
-			logger.info("Impossibile creare un tipoDerrata con Descrizione vuota");
-			throw new GesevException("Impossibile creare un tipoDerrata con Descrizione vuota", HttpStatus.BAD_REQUEST);
+			logger.info("Impossibile creare un lotto con Descrizione vuota");
+			throw new GesevException("Impossibile creare un lotto con Descrizione vuota", HttpStatus.BAD_REQUEST);
 		}
 		Optional<TipoDerrata> optionalTipoDerrataDescrizione = tipoDerrateRepositroy.findByDescrizione(tipoDerrata.getDescrizione());
 		if(optionalTipoDerrataDescrizione.isPresent())
 		{
-			logger.info("Impossibile creare un tipoDerrata con una descrizione gia' presente");
-			throw new GesevException("Impossibile creare un tipoDerrata con una descrizione gia' presente", HttpStatus.BAD_REQUEST);
+			logger.info("Impossibile creare un lotto con una descrizione gia' presente");
+			throw new GesevException("Impossibile creare un lotto con una descrizione gia' presente", HttpStatus.BAD_REQUEST);
 		}
-		logger.info("Creazione tipo derrata in corso...");
+		logger.info("Creazione lotto in corso...");
 		TipoDerrata tipoDerrataRepository =  tipoDerrateRepositroy.save(tipoDerrata);
 		if(tipoDerrataRepository == null)
-			throw new GesevException("Impossibile inserire un nuovo reocrod nella tabella TipoDerrata", HttpStatus.INTERNAL_SERVER_ERROR);
+			throw new GesevException("Impossibile inserire un nuovo reocrod nella tabella lotto", HttpStatus.INTERNAL_SERVER_ERROR);
 		return tipoDerrataRepository.getCodice();
 	}
 
@@ -76,26 +76,26 @@ public class TipoDerrateDAOImpl implements TipoDerrateDAO
 		
 		if(codiceTipoDerrata > maxCodice || codiceTipoDerrata < 0)
 		{
-			logger.info("Impossibile cancellare un tipoDerrata con questo Codice");
-			throw new GesevException("Impossibile cancellare un tipoDerrata con questo Codice", HttpStatus.BAD_REQUEST);
+			logger.info("Impossibile cancellare un lotto con questo Codice");
+			throw new GesevException("Impossibile cancellare un lotto con questo Codice", HttpStatus.BAD_REQUEST);
 		}
 		
 		Optional<TipoDerrata> optionalTipoDerrata = tipoDerrateRepositroy.findByCodice(codiceTipoDerrata);
 		if(!optionalTipoDerrata.isPresent())
 		{
-			logger.info("Impossibile cancellare un tipoDerrata, Codice non presente");
-			throw new GesevException("Impossibile cancellare un tipoDerrata, Codice non presente", HttpStatus.BAD_REQUEST);
+			logger.info("Impossibile cancellare un lotto, Codice non presente");
+			throw new GesevException("Impossibile cancellare un lotto, Codice non presente", HttpStatus.BAD_REQUEST);
 		}
 		
 		TipoDerrata tipoDerrata = optionalTipoDerrata.get();
 		if(tipoDerrata.getListaDerrata().size() > 0)
-			throw new GesevException("Impossibile cancellare il tipo derrata, poiche' e' associata ad una derrata", HttpStatus.BAD_REQUEST);
+			throw new GesevException("Impossibile cancellare il lotto, poiche' e' associata ad una derrata", HttpStatus.BAD_REQUEST);
 		
 		if(optionalTipoDerrata.isPresent())
 		{
-			logger.info("Cancellazione del tipo derrata con codice " + codiceTipoDerrata + " in corso...");
+			logger.info("Cancellazione del lotto con codice " + codiceTipoDerrata + " in corso...");
 			tipoDerrateRepositroy.deleteByCodice(codiceTipoDerrata);
-			logger.info("Cancellazione del tipo derrata con codice " + codiceTipoDerrata + " riuscita");
+			logger.info("Cancellazione del lotto con codice " + codiceTipoDerrata + " riuscita");
 		}
 		return codiceTipoDerrata;
 	}
@@ -109,8 +109,8 @@ public class TipoDerrateDAOImpl implements TipoDerrateDAO
 		// codice Massimo
 		if(codiceTipoDerrata > maxCodice || codiceTipoDerrata < 0)
 		{
-			logger.info("Impossibile modificare un tipoDerrata con questo Codice");
-			throw new GesevException("Impossibile modificare un tipoDerrata con questo Codice", HttpStatus.BAD_REQUEST);
+			logger.info("Impossibile modificare un lotto con questo Codice");
+			throw new GesevException("Impossibile modificare un lotto con questo Codice", HttpStatus.BAD_REQUEST);
 		}
 		
 		Optional<TipoDerrata> optionalTipoDerrataCodice = tipoDerrateRepositroy.findByCodice(codiceTipoDerrata);
@@ -120,21 +120,21 @@ public class TipoDerrateDAOImpl implements TipoDerrateDAO
 		if(optionalTipoDerrataDescrizione.isPresent() && optionalTipoDerrataDescrizione.get().getDescrizione().equalsIgnoreCase(tipoDerrata.getDescrizione()) && 
 				optionalTipoDerrataCodice.get().getCodice() != optionalTipoDerrataDescrizione.get().getCodice())
 		{
-			logger.info("Impossibile modificare un tipoDerrata, Descrizione già presente");
-			throw new GesevException("Impossibile modificare un tipoDerrata, Descrizione già presente", HttpStatus.BAD_REQUEST);
+			logger.info("Impossibile modificare un lotto, Descrizione già presente");
+			throw new GesevException("Impossibile modificare un lotto, Descrizione già presente", HttpStatus.BAD_REQUEST);
 		}
 				
 		// Controllo Codice
 		if(!optionalTipoDerrataCodice.isPresent())
 		{
-			logger.info("Impossibile modificare un tipoDerrata, Codice non presente");
-			throw new GesevException("Impossibile modificare un tipoDerrata, Codice non presente", HttpStatus.BAD_REQUEST);
+			logger.info("Impossibile modificare un lotto, Codice non presente");
+			throw new GesevException("Impossibile modificare un lotto, Codice non presente", HttpStatus.BAD_REQUEST);
 		}
 		if(optionalTipoDerrataCodice.isPresent())
 		{
-			logger.info("Modifica del tipo derrata con codice " + codiceTipoDerrata + " in corso...");
+			logger.info("Modifica del lotto con codice " + codiceTipoDerrata + " in corso...");
 			tipoDerrateRepositroy.save(tipoDerrata);
-			logger.info("Modifica del tipo derrata con codice " + codiceTipoDerrata + " riuscita");	
+			logger.info("Modifica del lotto con codice " + codiceTipoDerrata + " riuscita");	
 		}
 		return codiceTipoDerrata;
 	}
@@ -159,7 +159,7 @@ public class TipoDerrateDAOImpl implements TipoDerrateDAO
 			if(StringUtils.isBlank(valore))
 				throw new GesevException("Inserire un valore per la ricerca", HttpStatus.BAD_REQUEST);
 			
-			logger.info("Ricerca del tipo derrata sulla base della colonna " + colonna.toUpperCase() + " e del valore " + valore);
+			logger.info("Ricerca del lotto sulla base della colonna " + colonna.toUpperCase() + " e del valore " + valore);
 			logger.info("Controllo esistenza colonna...");
 			
 			try 
