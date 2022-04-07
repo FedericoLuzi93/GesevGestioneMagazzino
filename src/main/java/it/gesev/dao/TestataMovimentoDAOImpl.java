@@ -42,6 +42,7 @@ public class TestataMovimentoDAOImpl implements TestataMovimentoDAO {
 		logger.info("Ricerca testata movimento con ID fornitore " + idFornitore);
 		
 		List<TestataMovimento> testataMovimento = testataMovimentoRepository.getTestataMovimentoByIdFornitore(idFornitore.intValue());
+		return testataMovimento;
 //		if(testataMovimento.size() > 0)
 //			return testataMovimento;
 //		
