@@ -112,6 +112,19 @@ public class FornitoreDAOImpl implements FornitoreDAO {
 	       fornitore.getCodice() != optionalFornitore.get().getCodice())
 			throw new GesevException("La descrizione fornita risulta gia' associata ad un altro fornitore", HttpStatus.BAD_REQUEST);
 		
+		logger.info("Controllo partita IVA e codice fiscale...");
+		if(StringUtils.isBlank(fornitore.getPiCf()))
+			throw new GesevException("La partita IVA o il codice fiscale sono obbligatori", HttpStatus.BAD_REQUEST);
+		
+		if(fornitore.getPiCf().length() != 11 && fornitore.getPiCf().length() != 16)
+			throw new GesevException("La partita IVA ed il codice fiscale devono avere una lunghezza rispettivamente di 11 e 16 caratteri", HttpStatus.BAD_REQUEST);
+		
+		if(fornitore.getPiCf().length() == 11 && !fornitore.getPiCf().matches("^[0-9]+$"))
+			throw new GesevException("La partita IVA dev'essere composta di soli caratteri numerici", HttpStatus.BAD_REQUEST);
+		
+		if(fornitore.getPiCf().length() == 16 && !fornitore.getPiCf().matches("^[0-9a-zA-Z]$"))
+			throw new GesevException("Il codice fiscale dev'essere composto di soli caratteri alfanumerici", HttpStatus.BAD_REQUEST);
+		
 		logger.info("Aggiornamento in corso...");
 		Fornitore localFornitore = null;
 		if(optionalFornitore.isPresent() && optionalFornitore.get().getCodice() == fornitore.getCodice())
@@ -128,6 +141,8 @@ public class FornitoreDAOImpl implements FornitoreDAO {
 			throw new GesevException("Nessun fornitore presente con l'ID " + fornitore.getCodice(), HttpStatus.BAD_REQUEST);
 		
 		localFornitore.setDescrizione(fornitore.getDescrizione());
+		localFornitore.setPiCf(fornitore.getPiCf());
+		localFornitore.setRecapito(fornitore.getRecapito());
 		fornitoreRepository.save(localFornitore);
 		
 		logger.info("Fine aggiornamento");
