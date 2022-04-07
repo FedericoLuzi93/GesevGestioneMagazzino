@@ -42,11 +42,11 @@ public class TestataMovimentoDAOImpl implements TestataMovimentoDAO {
 		logger.info("Ricerca testata movimento con ID fornitore " + idFornitore);
 		
 		List<TestataMovimento> testataMovimento = testataMovimentoRepository.getTestataMovimentoByIdFornitore(idFornitore.intValue());
-		if(testataMovimento.size() > 0)
-			return testataMovimento;
-		
-		else
-			throw new GesevException("Nessun fornitore presente con l'ID fornito", HttpStatus.BAD_REQUEST);
+//		if(testataMovimento.size() > 0)
+//			return testataMovimento;
+//		
+//		else
+//			throw new GesevException("Nessun fornitore presente con l'ID fornito", HttpStatus.BAD_REQUEST);
 	}
 
 	@Override
