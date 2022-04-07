@@ -165,6 +165,7 @@ public class DerrataDAOImpl implements DerrataDAO
 		derrataMom.setUnitaMisura(derrata.getUnitaMisura());
 		derrataMom.setPrezzo(derrata.getPrezzo());
 		derrataMom.setQuantitaMinima(derrata.getQuantitaMinima());
+		derrataMom.setGiacenza(derrata.getGiacenza());
 		
 		derrataRepository.save(derrataMom);
 		
