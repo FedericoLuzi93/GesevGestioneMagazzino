@@ -6,11 +6,12 @@ import it.gesev.dto.FornitoreDTO;
 import it.gesev.dto.RicercaColonnaDTO;
 import it.gesev.dto.RicercaTestateDTO;
 import it.gesev.dto.RispostaMovimentiDTO;
+import it.gesev.entities.Fornitore;
 
 public interface FornitoreService {
 	public FornitoreDTO getFornitoreByCodice(String codice);
 	public List<FornitoreDTO> getAllFornitore();
-	public List<FornitoreDTO> creaFornitore(String descrizione);
+	public List<FornitoreDTO> creaFornitore(FornitoreDTO fornitore);
 	public List<FornitoreDTO> cancellaFornitore(Long idFornitore);
 	public List<FornitoreDTO> aggiornaFornitore(FornitoreDTO fornitore);
 	public List<FornitoreDTO> cercaFornitorePerColonna(List<RicercaColonnaDTO> ricerca);

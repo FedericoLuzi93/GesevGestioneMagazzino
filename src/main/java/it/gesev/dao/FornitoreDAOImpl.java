@@ -59,23 +59,40 @@ public class FornitoreDAOImpl implements FornitoreDAO {
 	}
 
 	@Override
-	public Integer creaFornitore(String descrizione) 
+	public Integer creaFornitore(Fornitore fornitore) 
 	{
-		logger.info("Creazione nuovo fornitore con descrizione: " + descrizione);
-		if(StringUtils.isBlank(descrizione))
+		logger.info("Creazione nuovo fornitore con descrizione: " + fornitore.getDescrizione());
+		if(StringUtils.isBlank(fornitore.getDescrizione()))
 		{
 			logger.info("La descrizione fornita non e' valida");
 			throw new GesevException("La descrizione fornita non e' valida", HttpStatus.BAD_REQUEST);
 		}
 		
 		logger.info("Controllo presenza fornitori con stessa descrizione...");
-		Optional<Fornitore> controlloFornitore = fornitoreRepository.findByDescrizione(descrizione);
+		Optional<Fornitore> controlloFornitore = fornitoreRepository.findByDescrizione(fornitore.getDescrizione());
 		if(controlloFornitore.isPresent())
 			throw new GesevException("Descizione associata a fornitore gia' esistente", HttpStatus.BAD_REQUEST);
 		
+		logger.info("Controllo partita IVA e codice fiscale...");
+		if(StringUtils.isBlank(fornitore.getPiCf()))
+			throw new GesevException("La partita IVA o il codice fiscale sono obbligatori", HttpStatus.BAD_REQUEST);
+		
+		controlloFornitore = fornitoreRepository.findByPiCf(fornitore.getPiCf());
+		if(controlloFornitore.isPresent())
+			throw new GesevException("Partita IVA o codice fiscale associati a fornitore gia' esistente", HttpStatus.BAD_REQUEST);
+		
+		if(fornitore.getPiCf().length() != 11 && fornitore.getPiCf().length() != 16)
+			throw new GesevException("La partita IVA ed il codice fiscale devono avere una lunghezza rispettivamente di 11 e 16 caratteri", HttpStatus.BAD_REQUEST);
+		
+		if(fornitore.getPiCf().length() == 11 && !fornitore.getPiCf().matches("^[0-9]+$"))
+			throw new GesevException("La partita IVA dev'essere composta di soli caratteri numerici", HttpStatus.BAD_REQUEST);
+		
+		if(fornitore.getPiCf().length() == 16 && !fornitore.getPiCf().matches("^[0-9a-zA-Z]+$"))
+			throw new GesevException("Il codice fiscale dev'essere composto di soli caratteri alfanumerici", HttpStatus.BAD_REQUEST);
+		
 		logger.info("Inserimento nuovo record...");
-		Fornitore fornitore = new Fornitore();
-		fornitore.setDescrizione(descrizione);
+//		Fornitore fornitore = new Fornitore();
+//		fornitore.setDescrizione(descrizione);
 		
 		Fornitore afterStoring = fornitoreRepository.save(fornitore);
 		return afterStoring.getCodice();

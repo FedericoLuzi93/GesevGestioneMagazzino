@@ -130,7 +130,7 @@ public class FornitoreController
 		
 		try
 		{
-			List<FornitoreDTO> listaFornitori = fornitoreService.creaFornitore(fornitore.getDescrizione());
+			List<FornitoreDTO> listaFornitori = fornitoreService.creaFornitore(fornitore);
 			esito.setBody(listaFornitori);
 			status = HttpStatus.OK;
 		}

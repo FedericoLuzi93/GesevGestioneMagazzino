@@ -9,4 +9,5 @@ import it.gesev.entities.Fornitore;
 public interface FornitoreRepository extends JpaRepository<Fornitore, Integer> 
 {
 	public Optional<Fornitore> findByDescrizione(String descrizione);
+	public Optional<Fornitore> findByPiCf(String piCf);
 }

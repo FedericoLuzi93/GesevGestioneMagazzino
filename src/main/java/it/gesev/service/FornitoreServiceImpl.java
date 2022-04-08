@@ -86,13 +86,14 @@ public class FornitoreServiceImpl implements FornitoreService {
 	}
 
 	@Override
-	public List<FornitoreDTO> creaFornitore(String descrizione) {
+	public List<FornitoreDTO> creaFornitore(FornitoreDTO fornitore) {
 		logger.info("Avvio del service per la creazione di un nuovo fornitore...");
 		
-		if(StringUtils.isAllBlank(descrizione))
-			throw new GesevException("Descrizione non valida", HttpStatus.BAD_REQUEST);
+//		if(StringUtils.isAllBlank(descrizione))
+//			throw new GesevException("Descrizione non valida", HttpStatus.BAD_REQUEST);
 		
-		Integer nuovoFornitore = fornitoreDAO.creaFornitore(descrizione);
+		ModelMapper mapper = new ModelMapper();
+		Integer nuovoFornitore = fornitoreDAO.creaFornitore(mapper.map(fornitore, Fornitore.class));
 		if(nuovoFornitore == null || nuovoFornitore < 1)
 			throw new GesevException("Errore nella creazione del fornitore", HttpStatus.INTERNAL_SERVER_ERROR);
 		
