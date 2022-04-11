@@ -139,7 +139,7 @@ public class FornitoreDAOImpl implements FornitoreDAO {
 		if(fornitore.getPiCf().length() == 11 && !fornitore.getPiCf().matches("^[0-9]+$"))
 			throw new GesevException("La partita IVA dev'essere composta di soli caratteri numerici", HttpStatus.BAD_REQUEST);
 		
-		if(fornitore.getPiCf().length() == 16 && !fornitore.getPiCf().matches("^[0-9a-zA-Z]$"))
+		if(fornitore.getPiCf().length() == 16 && !fornitore.getPiCf().matches("^[0-9a-zA-Z]{16}$"))
 			throw new GesevException("Il codice fiscale dev'essere composto di soli caratteri alfanumerici", HttpStatus.BAD_REQUEST);
 		
 		logger.info("Aggiornamento in corso...");
