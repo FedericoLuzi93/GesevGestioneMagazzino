@@ -1,5 +1,6 @@
 package it.gesev.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -31,5 +32,7 @@ public interface TipoDerrateRepository extends JpaRepository<TipoDerrata, Intege
 	void updateByCodice(@Param("descrizione") TipoDerrata tipoDerrata, @Param("codiceTipoDerrata") int codiceTipoDerrata);
 	
 	public Optional<TipoDerrata> findByDescrizione(String descrizione);
+	
+	public List<TipoDerrata> findAllByOrderByCodiceAsc();
 
 }

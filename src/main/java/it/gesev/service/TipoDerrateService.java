@@ -12,4 +12,5 @@ public interface TipoDerrateService
 	public int deleteTipoDerrata(int codiceTipoDerrata);
 	public int updateTipoDerrata(int codiceTipoDerrata, TipoDerrataDTO tipoDerrataDTO);
 	public List<TipoDerrataDTO> cercaTipoDerrataConColonna(List<RicercaColonnaDTO> ricerca);
+	public byte[] getStampaDerrata(Integer idTipoDerrata) throws Exception;
 }

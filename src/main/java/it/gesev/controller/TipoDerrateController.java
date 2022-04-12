@@ -1,12 +1,18 @@
 package it.gesev.controller;
 
+import java.io.FileNotFoundException;
+import java.text.ParseException;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -174,5 +180,44 @@ public class TipoDerrateController
 		}
 		esito.setStatus(status.value());
 		return ResponseEntity.status(status).headers(new HttpHeaders()).body(esito);
+	}
+	
+	@PostMapping(value = "/stampaDerrate")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Richiesta download elenco derrate fallita"),
+			@ApiResponse(code = 400, message = "Dati in ingresso non validi"),
+			@ApiResponse(code = 500, message = "Errore interno") })
+	public ResponseEntity<Resource> stampaDerrate(@RequestBody TipoDerrataDTO tipoDerrata) throws ParseException, FileNotFoundException
+	{
+		logger.info("Accesso al servizio stampaDerrate");
+		HttpHeaders headers = new HttpHeaders();
+		ResponseEntity<Resource> esito = null;
+
+		try 
+		{
+			byte[] fileContent = tipoDerrateService.getStampaDerrata(tipoDerrata.getCodice());
+			String fileName = tipoDerrata.getCodice() != null ? "derrate_lotto_" + StringUtils.leftPad(String.valueOf(tipoDerrata.getCodice()), 4, "0") :
+			                  "derrate_lotto";
+			
+			
+			headers.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + fileName + ".pdf");
+			headers.add(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, HttpHeaders.CONTENT_DISPOSITION);
+
+			esito =  ResponseEntity.ok().headers(headers).contentLength(fileContent.length)
+					.contentType(MediaType.APPLICATION_OCTET_STREAM).body(new ByteArrayResource(fileContent));
+		} 
+		
+		catch(GesevException gex)
+		{
+			logger.info("Si e' verificata un'eccezione", gex);
+		
+		}
+		
+		
+		catch(Exception ex)
+		{
+			logger.info("Si e' verificata un'eccezione interna", ex);
+		}
+		
+		return esito;
 	}
 }

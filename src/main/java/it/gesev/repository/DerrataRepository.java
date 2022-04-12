@@ -19,5 +19,6 @@ public interface DerrataRepository extends JpaRepository<Derrata, Integer>
 	@Query("select max(derrataId) from Derrata")
 	public Integer getMaxDerrataId();
 	
-
+	@Query("select d from Derrata d where d.tipoDerrata.codice = :tipoDerrataId")
+	public List<Derrata> findByTipoDerrataSortByDerrataId(int tipoDerrataId);
 }

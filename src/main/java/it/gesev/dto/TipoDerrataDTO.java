@@ -7,6 +7,6 @@ import lombok.Setter;
 @Setter
 public class TipoDerrataDTO 
 {
-	private int codice;
+	private Integer codice;
 	private String descrizione; 
 }

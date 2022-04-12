@@ -1,5 +1,7 @@
 package it.gesev.service;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,13 +13,22 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ResourceUtils;
 
 import it.gesev.dao.TipoDerrateDAO;
 import it.gesev.dto.RicercaColonnaDTO;
+import it.gesev.dto.StampaDerrateDTO;
 import it.gesev.dto.TipoDerrataDTO;
 import it.gesev.entities.TipoDerrata;
 import it.gesev.exc.GesevException;
 import it.gesev.utility.TipoDerrateMapper;
+import net.sf.jasperreports.engine.JREmptyDataSource;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 
 @Service
 public class TipoDerrateServiceImpl implements TipoDerrateService
@@ -106,5 +117,57 @@ public class TipoDerrateServiceImpl implements TipoDerrateService
 			outputList.add(mapper.map(tipoDerrata, TipoDerrataDTO.class));
 		
 		return outputList;
+	}
+
+	@Override
+	public byte[] getStampaDerrata(Integer idTipoDerrata) throws Exception 
+	{
+		logger.info("Generazione file delle stampe delle derrate...");
+		
+		byte[] arrayb = null;
+		
+		try 
+		{
+			/* lettura template */
+			File fileDerrate = ResourceUtils.getFile("classpath:StampaDerrate.jrxml");
+			
+			/* generazione oggetti */
+			List<StampaDerrateDTO> listaRighe = tipoDerrateDAO.getRigheStampaDerrate(idTipoDerrata);
+			if(listaRighe == null || listaRighe.size() == 0)
+				throw new GesevException("Impossibile trovare derrate o identificativo tipo derrata errato", HttpStatus.BAD_REQUEST);
+			
+			/* creazione sorgente per template */
+			JRBeanCollectionDataSource JRBlistaRighe = new JRBeanCollectionDataSource(listaRighe);
+			
+			/* parametri */
+			Map<String, Object> parameters = new HashMap<>();
+			if(idTipoDerrata == null)
+				parameters.put("titolo", "ELENCO DERRATE");
+			
+			else
+				parameters.put("titolo", "ELENCO DERRATE DEL LOTTO " + listaRighe.get(0).getDescrizioneLotto().toUpperCase());
+			
+			parameters.put("TabElencoDerrate", JRBlistaRighe);
+			
+			/* generazione file */
+			JasperReport report = JasperCompileManager.compileReport(fileDerrate.getAbsolutePath());
+			JasperPrint print = JasperFillManager.fillReport(report, parameters, new JREmptyDataSource());
+			arrayb = JasperExportManager.exportReportToPdf(print);
+				
+		} 
+		
+		catch (Exception e) 
+		{
+			if(e instanceof GesevException)
+			{
+				GesevException gsvException = (GesevException)e;
+				throw new GesevException(gsvException.getMessage(), HttpStatus.BAD_REQUEST);
+			}
+			
+			else
+				throw new Exception(e);
+		}
+		
+		return arrayb;
 	}
 }
