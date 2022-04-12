@@ -182,7 +182,7 @@ public class TipoDerrateController
 		return ResponseEntity.status(status).headers(new HttpHeaders()).body(esito);
 	}
 	
-	@PostMapping(value = "/stampaDerrate")
+	@GetMapping(value = "/stampaDerrate")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Richiesta download elenco derrate fallita"),
 			@ApiResponse(code = 400, message = "Dati in ingresso non validi"),
 			@ApiResponse(code = 500, message = "Errore interno") })
