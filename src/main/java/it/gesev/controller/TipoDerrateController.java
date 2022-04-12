@@ -182,11 +182,11 @@ public class TipoDerrateController
 		return ResponseEntity.status(status).headers(new HttpHeaders()).body(esito);
 	}
 	
-	@GetMapping(value = "/stampaDerrate")
+	@GetMapping(value = "/stampaDerrate/{idLotto}")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Richiesta download elenco derrate fallita"),
 			@ApiResponse(code = 400, message = "Dati in ingresso non validi"),
 			@ApiResponse(code = 500, message = "Errore interno") })
-	public ResponseEntity<Resource> stampaDerrate(@RequestBody TipoDerrataDTO tipoDerrata) throws ParseException, FileNotFoundException
+	public ResponseEntity<Resource> stampaDerrate(@PathVariable("idLotto") Integer idLotto) throws ParseException, FileNotFoundException
 	{
 		logger.info("Accesso al servizio stampaDerrate");
 		HttpHeaders headers = new HttpHeaders();
@@ -194,8 +194,8 @@ public class TipoDerrateController
 
 		try 
 		{
-			byte[] fileContent = tipoDerrateService.getStampaDerrata(tipoDerrata.getCodice());
-			String fileName = tipoDerrata.getCodice() != null ? "derrate_lotto_" + StringUtils.leftPad(String.valueOf(tipoDerrata.getCodice()), 4, "0") :
+			byte[] fileContent = tipoDerrateService.getStampaDerrata(idLotto <= 0 ? null : idLotto);
+			String fileName = idLotto > 0 ? "derrate_lotto_" + StringUtils.leftPad(String.valueOf(idLotto), 4, "0") :
 			                  "derrate_lotto";
 			
 			
