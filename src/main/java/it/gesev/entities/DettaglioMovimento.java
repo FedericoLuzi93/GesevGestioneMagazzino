@@ -49,7 +49,7 @@ public class DettaglioMovimento
 
 	@ManyToOne(cascade={CascadeType.PERSIST, CascadeType.DETACH,
 		 	CascadeType.MERGE, CascadeType.REFRESH})
-	@JoinColumn(name="NUM_PROGRESSIVO")
+	@JoinColumn(name="testata_movimento_fk")
 	private TestataMovimento testataMovimento;
 	
 	public DettaglioMovimento()
