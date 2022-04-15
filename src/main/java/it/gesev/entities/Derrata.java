@@ -56,9 +56,6 @@ public class Derrata
 	private TipoDerrata tipoDerrata;
 	
 	@OneToOne(mappedBy="derrata")
-	private DettaglioPrelevamento dettaglioPrelevamento;
-	
-	@OneToOne(mappedBy="derrata")
 	private DettaglioMovimento dettaglioMovimento;
 	
 	public Derrata()

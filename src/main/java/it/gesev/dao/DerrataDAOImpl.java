@@ -96,7 +96,6 @@ public class DerrataDAOImpl implements DerrataDAO
 		derrataObj.setQuantitaMinima(derrata.getQuantitaMinima());
 		derrataObj.setCodiceMensa(derrata.getCodiceMensa());
 		
-		derrataObj.setDettaglioPrelevamento(derrata.getDettaglioPrelevamento());
 		derrataObj.setDettaglioMovimento(derrata.getDettaglioMovimento());
 		derrataObj.setTipoDerrata(optionalTipoDerrata.get());
 			
