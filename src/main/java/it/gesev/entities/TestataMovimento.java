@@ -46,6 +46,15 @@ public class TestataMovimento
 	@Column(name="UTENTE_OPERATORE")
 	private String utenteOperatore;
 	
+	@Column(name = "trasferito")
+	private String trasferito;
+	
+	@Column(name = "anno")
+	private Integer anno;
+	
+	@Column(name = "num_ordine_registro")
+	private Integer numOrdineRegistro;
+	
 	@ManyToOne(cascade={CascadeType.PERSIST, CascadeType.DETACH,
 		 	CascadeType.MERGE, CascadeType.REFRESH})
 	@JoinColumn(name="CODICE_ENTE")

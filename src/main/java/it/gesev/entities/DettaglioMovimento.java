@@ -24,7 +24,7 @@ public class DettaglioMovimento
 {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="ID_DETTAGLIO_MOVIMENTO ")
+	@Column(name="ID_DETTAGLIO_MOVIMENTO")
 	private Integer idDettaglioMovimento;
 	
 	@Column(name="DATA_DETTAGLIO_MOVIMENTO")

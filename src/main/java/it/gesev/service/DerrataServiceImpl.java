@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import it.gesev.dao.DerrataDAO;
 import it.gesev.dto.DerrataDTO;
+import it.gesev.dto.MovimentoDTO;
 import it.gesev.dto.RicercaColonnaDTO;
 import it.gesev.entities.Derrata;
 import it.gesev.exc.GesevException;
@@ -24,6 +25,7 @@ public class DerrataServiceImpl implements DerrataService {
 
 	@Autowired
 	private DerrataDAO derrataDAO;
+	
 	
 	@Value("${gesev.data.format}")
 	private String dateFormat;
@@ -113,6 +115,8 @@ public class DerrataServiceImpl implements DerrataService {
 		
 		return outputList;
 	}
+
+	
 
 
 }

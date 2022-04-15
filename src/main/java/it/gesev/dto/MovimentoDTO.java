@@ -12,5 +12,6 @@ public class MovimentoDTO
 	private String idTestata;
 	private String dataTestata;
 	private String totaleTestata;
+	private Integer idEnte;
 	private List<DettaglioMovimentoDTO> listaDettagli;
 }
