@@ -3,16 +3,20 @@ package it.gesev.entities;
 
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import lombok.Getter;
@@ -55,8 +59,8 @@ public class Derrata
 	@JoinColumn(name="TIPO_DERRATA")
 	private TipoDerrata tipoDerrata;
 	
-	@OneToOne(mappedBy="derrata")
-	private DettaglioMovimento dettaglioMovimento;
+	@OneToMany(mappedBy="derrata", fetch = FetchType.LAZY)
+	private List<DettaglioMovimento> dettaglioMovimento;
 	
 	public Derrata()
 	{
