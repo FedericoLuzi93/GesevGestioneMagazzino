@@ -98,7 +98,7 @@ public class MovimentoServiceImpl implements MovimentoService {
 //			parameters.put("giorno", formatter.format(testata.getData()));
 			parameters.put("giorno", formatter.format(new Date()));
 			parameters.put("TabellaPrelevamento", JRBlistaRighe);
-//			parameters.put("TabellaListaFirme", JRBlistaFirme);
+			parameters.put("TabellaListaFirme", JRBlistaFirme);
 			
 			/* generazione file */
 			JasperReport report = JasperCompileManager.compileReport(fileDerrate.getAbsolutePath());
