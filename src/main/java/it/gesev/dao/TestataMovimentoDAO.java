@@ -10,5 +10,7 @@ public interface TestataMovimentoDAO
 {
 	public List<TestataMovimento> getDettaglioMovimentoByFornitore(Long idFornitore);
 	public List<TestataMovimento> cercaDerrateInTestate(Date dataDa, Date dataA, String descrizioneDerrata, Long idFornitore);
-	public void prelevamentoMensa(List<DettaglioMovimentoDTO> listaMovimenti, Integer idEnte);
+	public TestataMovimento prelevamentoMensa(List<DettaglioMovimentoDTO> listaMovimenti, Integer idEnte, Integer idMensa);
+	public List<Object[]> getDerrateTestate(Integer idTestata);
+	public List<Object[]> getDatiFirmaDC8(Integer idMensa);
 }

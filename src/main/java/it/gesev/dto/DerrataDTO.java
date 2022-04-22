@@ -16,4 +16,8 @@ public class DerrataDTO
 	private double quantitaMinima;
 	private int codiceMensa;
 	private TipoDerrataDTO tipoDerrataDTO;
+	
+	/* dati per generazione report */
+	private double quantitaImpiegate;
+	private double totaleValore;
 }

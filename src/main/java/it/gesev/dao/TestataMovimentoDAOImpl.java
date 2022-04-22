@@ -8,6 +8,7 @@ import java.util.Optional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
@@ -27,6 +28,7 @@ import it.gesev.entities.Derrata;
 import it.gesev.entities.DettaglioMovimento;
 import it.gesev.entities.Ente;
 import it.gesev.entities.Fornitore;
+import it.gesev.entities.Mensa;
 import it.gesev.entities.RegistroGiornale;
 import it.gesev.entities.TestataMovimento;
 import it.gesev.entities.TipoMovimento;
@@ -34,6 +36,7 @@ import it.gesev.exc.GesevException;
 import it.gesev.repository.DerrataRepository;
 import it.gesev.repository.DettaglioMovimentoRepository;
 import it.gesev.repository.EnteRepository;
+import it.gesev.repository.MensaRepository;
 import it.gesev.repository.RegistroGiornaleRepository;
 import it.gesev.repository.TestataMovimentoRepository;
 import it.gesev.repository.TipoMovimentoRepository;
@@ -55,6 +58,9 @@ public class TestataMovimentoDAOImpl implements TestataMovimentoDAO {
 	
 	@Autowired
 	private RegistroGiornaleRepository registroGiornaleRepository;
+	
+	@Autowired
+	private MensaRepository mensaRepository;
 	
 	@Autowired
 	private EnteRepository enteRepository;
@@ -133,13 +139,14 @@ public class TestataMovimentoDAOImpl implements TestataMovimentoDAO {
 		return listaTestate;
 	}
 
+	@SuppressWarnings("unused")
 	@Override
 	@Transactional
-	public void prelevamentoMensa(List<DettaglioMovimentoDTO> listaMovimenti, Integer idEnte) {
+	public TestataMovimento prelevamentoMensa(List<DettaglioMovimentoDTO> listaMovimenti, Integer idEnte, Integer idMensa) {
 		logger.info("Inserimento dei movimenti...");
 		
 		if(listaMovimenti == null || listaMovimenti.size() == 0)
-			return;
+			return null;
 		
 		logger.info("Creazione testata...");
 		TestataMovimento testataMovimento = new TestataMovimento();
@@ -161,6 +168,16 @@ public class TestataMovimentoDAOImpl implements TestataMovimentoDAO {
 			throw new GesevException("Impossibile trovare un ente con ID = " + idEnte, HttpStatus.BAD_REQUEST);
 		
 		testataMovimento.setEnte(optEnte.get());
+		
+		/* ricerca mensa */
+		if(idMensa == null)
+			throw new GesevException("ID mensa non valido", HttpStatus.BAD_REQUEST);
+		
+		Optional<Mensa> optMensa = mensaRepository.findById(idMensa);
+		if(!optMensa.isPresent())
+			throw new GesevException("ID mensa non valido", HttpStatus.BAD_REQUEST);
+		
+		testataMovimento.setMensa(optMensa.get());
 		
 		testataMovimento.setNumOrdineLavoro(0);
 		testataMovimento.setNota("Prelevamento mensa");
@@ -248,12 +265,58 @@ public class TestataMovimentoDAOImpl implements TestataMovimentoDAO {
 		/* aggiornamento testata */
 		testataMovimento.setTotaleImporto(totaleTestata);
 		testataMovimento.setListaDettaglioMovimento(listaDettagli);
-		testataMovimentoRepository.save(testataMovimento);
+		TestataMovimento testataMovimentoFinale = testataMovimentoRepository.save(testataMovimento);
 		
 		/* aggiornamento giornale */
 		registro.setNumeroRegistroGiornale(registro.getNumeroRegistroGiornale() + 1);
 		registroGiornaleRepository.save(registro);
 		
+		return testataMovimentoFinale;
+		
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Object[]> getDerrateTestate(Integer idTestata) {
+		logger.info("Ricerca derrate associate alla testata");
+		
+		if(idTestata == null)
+			throw new GesevException("ID testata non valido", HttpStatus.BAD_REQUEST);
+		
+		String queryString = "select d.descrizione_derrata, d.unita_misura, dm.quantita_effettiva, d.prezzo, dm.totale_valore  "
+				+ "from testata_movimento tm left join dettaglio_movimento dm on dm.testata_movimento_fk = tm.numero_progressivo  "
+				+ "left join derrata d on dm.derrata = d.derrata_id  "
+				+ "where tm.numero_progressivo = :idTestata";
+		
+		Query query = entityManager.createNativeQuery(queryString).setParameter("idTestata", idTestata);
+		
+		return query.getResultList();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Object[]> getDatiFirmaDC8(Integer idMensa) 
+	{
+		logger.info("Ricerca firme per modello DC4...");
+		
+		if(idMensa == null)
+			throw new GesevException("ID mensa non valido", HttpStatus.BAD_REQUEST);
+		
+		String queryString = "select  "
+				+ "case when arrm.flag_approvatore = 'Y' then 'Approvatore' else 'Firmatario' end, "
+				+ "rm.descrizione_ruolo_mensa , "
+				+ "d.nome, "
+				+ "d.cognome,  "
+				+ "arrm.ordine_firma  "
+				+ "from ass_report_ruolo_mensa arrm left join ass_dipendente_ruolo adr on arrm.ruolo_fk = adr.ruolo_fk  "
+				+ "left join dipendente d on d.codice_dipendente = adr.dipendente_fk  "
+				+ "left join ruolo_mensa rm on arrm.ruolo_fk = rm.codice_ruolo_mensa  "
+				+ "where arrm.report_fk = 'DC8' and adr.mensa_fk = :idMensa "
+				+ "order by arrm.ordine_firma ";
+		
+		Query query = entityManager.createNativeQuery(queryString).setParameter("idMensa", idMensa);
+		
+		return query.getResultList();
 	}
 
 	

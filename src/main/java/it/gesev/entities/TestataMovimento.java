@@ -70,6 +70,11 @@ public class TestataMovimento
 	@JoinColumn(name="CODICE_FORNITORE")
 	private Fornitore fornitore;
 	
+	@ManyToOne(cascade={CascadeType.PERSIST, CascadeType.DETACH,
+		 	CascadeType.MERGE, CascadeType.REFRESH})
+	@JoinColumn(name="mensa_fk")
+	private Mensa mensa;
+	
 	@OneToMany(mappedBy="testataMovimento", fetch = FetchType.LAZY)
 	private List<DettaglioMovimento> listaDettaglioMovimento;
 	

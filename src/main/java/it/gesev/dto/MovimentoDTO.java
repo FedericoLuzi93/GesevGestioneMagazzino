@@ -13,5 +13,6 @@ public class MovimentoDTO
 	private String dataTestata;
 	private String totaleTestata;
 	private Integer idEnte;
+	private Integer idMensa;
 	private List<DettaglioMovimentoDTO> listaDettagli;
 }
