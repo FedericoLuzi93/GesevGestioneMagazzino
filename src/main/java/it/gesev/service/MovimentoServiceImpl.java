@@ -8,7 +8,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -22,6 +21,7 @@ import it.gesev.dao.TestataMovimentoDAO;
 import it.gesev.dto.DerrataDTO;
 import it.gesev.dto.MovimentoDTO;
 import it.gesev.dto.jasper.FirmaDC4Jasper;
+import it.gesev.entities.TestataMovimento;
 import it.gesev.exc.GesevException;
 import net.sf.jasperreports.engine.JREmptyDataSource;
 import net.sf.jasperreports.engine.JasperCompileManager;
@@ -40,15 +40,24 @@ public class MovimentoServiceImpl implements MovimentoService {
 	private static final Logger logger = LoggerFactory.getLogger(MovimentoServiceImpl.class);
 	
 	@Override
-	public byte[] prelevamentoMensa(MovimentoDTO movimento) 
+	public Integer prelevamentoMensa(MovimentoDTO movimento) 
 	{
 		logger.info("Servizio prelevamento mensa");
-		//TestataMovimento testata = testataDAO.prelevamentoMensa(movimento.getListaDettagli(), movimento.getIdEnte());
+		TestataMovimento testata = testataDAO.prelevamentoMensa(movimento.getListaDettagli(), movimento.getIdEnte(), movimento.getIdMensa());
+		
+		return testata.getNumeroProgressivo();
+		
+	}
+
+	@Override
+	public byte[] downloadDettaglioPrelevamento(Integer idTestata) 
+	{
+		logger.info("Download dettaglio prelevamento con numero prgressivo " + idTestata);
+		TestataMovimento testata = testataDAO.getTestataByNumeroProgressivo(idTestata);
 		
 		logger.info("Generazione datasource per report DC8...");
-//		List<Object[]> recordDerrate = testataDAO.getDerrateTestate(testata.getNumeroProgressivo());
-		List<Object[]> recordDerrate = testataDAO.getDerrateTestate(16);
-		List<Object[]> recordFirme = testataDAO.getDatiFirmaDC8(265);
+		List<Object[]> recordDerrate = testataDAO.getDerrateTestate(testata.getNumeroProgressivo());
+		List<Object[]> recordFirme = testataDAO.getDatiFirmaDC8(testata.getMensa().getCodiceMensa());
 		List<DerrataDTO> listaDerrate = new ArrayList<>();
 		List<FirmaDC4Jasper> listaFirme = new ArrayList<>();
 		
@@ -88,15 +97,12 @@ public class MovimentoServiceImpl implements MovimentoService {
 			
 			/* parametri */
 			Map<String, Object> parameters = new HashMap<>();
-//			parameters.put("ente", testata.getEnte().getDescrizioneEnte().toUpperCase());
-			parameters.put("ente", "Ente");
-//			parameters.put("buono", StringUtils.leftPad(String.valueOf(testata.getNumOrdineRegistro()), 4));
-			parameters.put("buono", StringUtils.leftPad(String.valueOf(3), 4, "0"));
+			parameters.put("ente", testata.getEnte().getDescrizioneEnte().toUpperCase());
+			parameters.put("buono", StringUtils.leftPad(String.valueOf(testata.getNumOrdineRegistro()), 4, "0"));
 			parameters.put("totale", listaDerrate.stream().mapToDouble(d -> d.getTotaleValore()).reduce(0, (a, b) -> a + b));
 			
 			SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
-//			parameters.put("giorno", formatter.format(testata.getData()));
-			parameters.put("giorno", formatter.format(new Date()));
+			parameters.put("giorno", formatter.format(testata.getData()));
 			parameters.put("TabellaPrelevamento", JRBlistaRighe);
 			parameters.put("TabellaListaFirme", JRBlistaFirme);
 			

@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +22,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import it.gesev.dto.DerrataDTO;
+import it.gesev.dto.EsitoDTO;
 import it.gesev.dto.MovimentoDTO;
 import it.gesev.exc.GesevException;
 import it.gesev.service.MovimentoService;
@@ -37,11 +40,11 @@ public class MovimentoController
 	private final String MESSAGGIO_ERRORE_INTERNO = "Si e' verificato un errore interno";
 	
 	/* Leggi tutte Derrata */
-	@PostMapping("/prelevamentoMensa")
+	@PostMapping("/downloadDettaglioPrelevamento/{idTestata}")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK"),
 			@ApiResponse(code = 400, message = "Dati in ingresso non validi"),
 			@ApiResponse(code = 500, message = "Errore interno") })
-	public ResponseEntity<Resource> prelevamentoMensa(@RequestBody MovimentoDTO movimento)
+	public ResponseEntity<Resource> prelevamentoMensa(@PathVariable("idTestata") Integer idTestata)
 	{
 		logger.info("Invocato API service prelevamentoMensa");
 		HttpHeaders headers = new HttpHeaders();
@@ -53,7 +56,7 @@ public class MovimentoController
 		
 		try
 		{
-			byte[] fileBytes = movimentoService.prelevamentoMensa(movimento);
+			byte[] fileBytes = movimentoService.downloadDettaglioPrelevamento(idTestata);
 			result = ResponseEntity.ok().headers(headers).contentLength(fileBytes.length)
 					.contentType(MediaType.APPLICATION_OCTET_STREAM).body(new ByteArrayResource(fileBytes));
 		}
@@ -73,6 +76,38 @@ public class MovimentoController
 		
 		return result;
 		
+	}
+	
+	@PostMapping("prelevamentoMensa")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK"),
+			@ApiResponse(code = 400, message = "Dati in ingresso non validi"),
+			@ApiResponse(code = 500, message = "Errore interno") })
+	public ResponseEntity<EsitoDTO> prelevamentoMensa(@RequestBody MovimentoDTO movimento)
+	{
+		logger.info("Invocato API service creaDerrprelevamentoMensaata");
+		EsitoDTO esito = new EsitoDTO();
+		HttpStatus status = null;
+		
+		try
+		{
+			esito.setBody(movimentoService.prelevamentoMensa(movimento));
+			status = HttpStatus.OK;
+		}
+		
+		catch(GesevException exc)
+		{
+			logger.info("Eccezione nel servizio creaDerrata ", exc);
+			status = exc.getStatus();
+			esito.setMessaggio(exc.getMessage());
+		}
+		catch(Exception e)
+		{
+			logger.info("Eccezione nel servizio creaDerrata ", e);
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
+			esito.setMessaggio(MESSAGGIO_ERRORE_INTERNO);
+		}
+		
+		return ResponseEntity.status(status).body(esito);
 	}
 	
 }

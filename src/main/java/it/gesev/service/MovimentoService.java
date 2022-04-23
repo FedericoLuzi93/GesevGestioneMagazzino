@@ -4,5 +4,6 @@ import it.gesev.dto.MovimentoDTO;
 
 public interface MovimentoService 
 {
-	public byte[] prelevamentoMensa(MovimentoDTO movimento);
+	public Integer prelevamentoMensa(MovimentoDTO movimento);
+	public byte[] downloadDettaglioPrelevamento(Integer idTestata);
 }

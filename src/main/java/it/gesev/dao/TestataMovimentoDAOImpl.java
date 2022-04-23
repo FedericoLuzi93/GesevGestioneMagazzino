@@ -319,5 +319,18 @@ public class TestataMovimentoDAOImpl implements TestataMovimentoDAO {
 		return query.getResultList();
 	}
 
+	@Override
+	public TestataMovimento getTestataByNumeroProgressivo(Integer numeroProgressivo) 
+	{
+		logger.info("Ricerca testata dal numero progressivo...");
+		Optional<TestataMovimento> optTestata = testataMovimentoRepository.findById(numeroProgressivo);
+		if(optTestata.isPresent())
+			return optTestata.get();
+		
+		else
+			return null;
+	}
+
+	
 	
 }

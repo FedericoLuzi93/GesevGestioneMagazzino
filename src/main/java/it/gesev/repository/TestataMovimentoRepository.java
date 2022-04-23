@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import it.gesev.entities.TestataMovimento;
 
-public interface TestataMovimentoRepository extends JpaRepository<TestataMovimento,Long> 
+public interface TestataMovimentoRepository extends JpaRepository<TestataMovimento, Integer> 
 {
 	@Query("select tm from TestataMovimento tm where tm.fornitore.codice = :idFornitore")
 	public List<TestataMovimento> getTestataMovimentoByIdFornitore(@Param("idFornitore")Integer idFornitore);
