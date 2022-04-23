@@ -14,4 +14,5 @@ public interface TestataMovimentoDAO
 	public List<Object[]> getDerrateTestate(Integer idTestata);
 	public List<Object[]> getDatiFirmaDC8(Integer idMensa);
 	public TestataMovimento getTestataByNumeroProgressivo(Integer numeroProgressivo);
+	public String getNumeroBuono();
 }

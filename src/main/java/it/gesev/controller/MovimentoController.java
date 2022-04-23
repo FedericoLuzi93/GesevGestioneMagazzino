@@ -110,4 +110,36 @@ public class MovimentoController
 		return ResponseEntity.status(status).body(esito);
 	}
 	
+	@PostMapping("getNumeroBuono")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK"),
+			@ApiResponse(code = 400, message = "Dati in ingresso non validi"),
+			@ApiResponse(code = 500, message = "Errore interno") })
+	public ResponseEntity<EsitoDTO> getNumeroBuono()
+	{
+		logger.info("Invocato API service getNumeroBuono");
+		EsitoDTO esito = new EsitoDTO();
+		HttpStatus status = null;
+		
+		try
+		{
+			esito.setBody(movimentoService.getNumeroBuono());
+			status = HttpStatus.OK;
+		}
+		
+		catch(GesevException exc)
+		{
+			logger.info("Eccezione nel servizio creaDerrata ", exc);
+			status = exc.getStatus();
+			esito.setMessaggio(exc.getMessage());
+		}
+		catch(Exception e)
+		{
+			logger.info("Eccezione nel servizio creaDerrata ", e);
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
+			esito.setMessaggio(MESSAGGIO_ERRORE_INTERNO);
+		}
+		
+		return ResponseEntity.status(status).body(esito);
+	}
+	
 }

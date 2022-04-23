@@ -331,6 +331,21 @@ public class TestataMovimentoDAOImpl implements TestataMovimentoDAO {
 			return null;
 	}
 
+	@Override
+	public String getNumeroBuono() 
+	{
+		logger.info("Ricerca numero buono...");
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(new Date());
+		
+		Optional<RegistroGiornale> registro = registroGiornaleRepository.findById(calendar.get(Calendar.YEAR));
+		if(registro.isPresent())
+			return StringUtils.leftPad(String.valueOf(registro.get().getNumeroRegistroGiornale()), 4, "0");
+		
+		else
+			return "0001";
+	}
+
 	
 	
 }

@@ -124,4 +124,11 @@ public class MovimentoServiceImpl implements MovimentoService {
 
 	}
 
+	@Override
+	public String getNumeroBuono() 
+	{
+		logger.info("Servizio di ricerca del nuomero buono...");
+		return testataDAO.getNumeroBuono();
+	}
+
 }
