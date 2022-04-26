@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,7 +23,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import it.gesev.dto.DerrataDTO;
 import it.gesev.dto.EsitoDTO;
 import it.gesev.dto.MovimentoDTO;
 import it.gesev.exc.GesevException;
@@ -40,7 +40,7 @@ public class MovimentoController
 	private final String MESSAGGIO_ERRORE_INTERNO = "Si e' verificato un errore interno";
 	
 	/* Leggi tutte Derrata */
-	@PostMapping("/downloadDettaglioPrelevamento/{idTestata}")
+	@GetMapping("/downloadDettaglioPrelevamento/{idTestata}")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK"),
 			@ApiResponse(code = 400, message = "Dati in ingresso non validi"),
 			@ApiResponse(code = 500, message = "Errore interno") })
@@ -110,7 +110,7 @@ public class MovimentoController
 		return ResponseEntity.status(status).body(esito);
 	}
 	
-	@PostMapping("getNumeroBuono")
+	@GetMapping("getNumeroBuono")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK"),
 			@ApiResponse(code = 400, message = "Dati in ingresso non validi"),
 			@ApiResponse(code = 500, message = "Errore interno") })
